@@ -10,20 +10,18 @@ of the folders.
 os.chdir('..')
 with Cd('word_sense_disambigation_corpora'):
     with Cd('masc/written/blog/'):
-        files = os.listdir()
-        xmldoc = minidom.parse(files[0])
-        itemlist = xmldoc.getElementsByTagName('word')
-        print(len(itemlist))
-        print(itemlist[0].attributes['text'].value)
+        for f in os.listdir():
+            xmldoc = minidom.parse(f)
+            itemlist = xmldoc.getElementsByTagName('word')
 
-        wordList = []
-        for s in itemlist:
-            for key in s.attributes.keys():
-                dct = {}
-                dct[key] = s.attributes[key].value
-                wordList.append(dct)
-            
-        for w in wordList:
-            for key in w.keys():
-                print(w[key])
-            print()
+            wordList = []
+            for s in itemlist:
+                for key in s.attributes.keys():
+                    dct = {}
+                    dct[key] = s.attributes[key].value
+                    wordList.append(dct)
+                
+            for w in wordList:
+                for key in w.keys():
+                    print(w[key])
+                print()
