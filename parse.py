@@ -18,9 +18,12 @@ with Cd('word_sense_disambigation_corpora'):
 
         wordList = []
         for s in itemlist:
-            dct = {}
-            dct["text"] = s.attributes['text'].value
-            wordList.append(dct)
-        
+            for key in s.attributes.keys():
+                dct = {}
+                dct[key] = s.attributes[key].value
+                wordList.append(dct)
+            
         for w in wordList:
-            print(dct["text"])
+            for key in w.keys():
+                print(w[key])
+            print()
