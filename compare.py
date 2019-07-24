@@ -62,6 +62,34 @@ def getRawSentences(docname):
     return sentences
 
 
+"""
+
+"""
+def getSenses(docname):
+    with open("googledata.json") as json_file:
+        data = json.load(json_file)
+
+        sentences = []
+        for document in data:
+            if document["docname"] == docname or docname == "all":
+                wordList = document["doc"]
+                sentences = []
+                sentence = []
+                cur_pos = -1
+                for x in range(len(wordList)):
+                    word = wordList[x]
+                    
+                    cur_pos += 1
+
+                    if wordList[x]["break_level"] == "SENTENCE_BREAK":
+                        print(sentence)
+                        sentences.append(sentence)
+                        sentence = []
+                        cur_pos = 0
+                    if "sense" in word:
+                        sentence.append({"word": word["text"], "pos": cur_pos, "sense": word["sense"]})\
+                            
+    return sentences
 
 
 """
@@ -114,7 +142,7 @@ if __name__ == "__main__":
     
     #sentences = getTokenizedSentences("letters", "all")
     #pp.pprint()
-    getRawSentences("all")
+    getSenses("/written/letters/112C-L014.txt")
     #compare_word_same_sense(sentences)
 
     
