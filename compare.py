@@ -137,6 +137,24 @@ def makeSentences(wordList, word):
     return sentences
 
 
+def TrackRawSentenceIndices(bert_sent):
+    tracking = []
+    n = 0
+    for bert_word in bert_sent:
+        if not bert_word.startswith("##"):
+            n += 1
+        tracking.append(n)
+    return tracking
+
+def getBertSentenceFromRaw(raw_sent):
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    bert_sent_list = []
+    for raw_word in raw_sent:
+        bert_tokens = tokenizer.tokenize(raw_word)
+        bert_sent_list += bert_tokens
+    return bert_sent_list
+
+
 if __name__ == "__main__":
     pp = pprint.PrettyPrinter(indent=4)
     
