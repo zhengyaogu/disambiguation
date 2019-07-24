@@ -36,12 +36,7 @@ def compare_word_same_sense(tokenized_sentences):
 
 
 
-
-"""
-Convert the specified document from the json file to a list of sentences,
-where each sentence is stored as a list of words.
-"""
-def getRawSentences(docname):
+def getRawSentencesAndSenses(docname):
     with open("googledata.json") as json_file:
         data = json.load(json_file)
 
@@ -51,45 +46,24 @@ def getRawSentences(docname):
                 wordList = document["doc"]
                 sentences = []
                 sentence = []
-                for x in range(len(wordList)):
-                    
-                    if wordList[x]["break_level"] == "SENTENCE_BREAK":
-                        print(sentence)
-                        sentences.append(sentence)
-                        sentence = []
-                    sentence.append(wordList[x]["text"])
-
-    return sentences
-
-
-"""
-
-"""
-def getSenses(docname):
-    with open("googledata.json") as json_file:
-        data = json.load(json_file)
-
-        sentences = []
-        for document in data:
-            if document["docname"] == docname or docname == "all":
-                wordList = document["doc"]
-                sentences = []
-                sentence = []
+                sense_sentence = []
+                sense_sentences = []
                 cur_pos = -1
-                for x in range(len(wordList)):
-                    word = wordList[x]
-                    
+                for word in wordList:
                     cur_pos += 1
-
-                    if wordList[x]["break_level"] == "SENTENCE_BREAK":
+                    if word["break_level"] == "SENTENCE_BREAK":
                         print(sentence)
                         sentences.append(sentence)
+                        sense_sentences.append(sense_sentence)
                         sentence = []
+                        sense_sentence = []
                         cur_pos = 0
+
+                    sentence.append(word["text"])
                     if "sense" in word:
-                        sentence.append({"word": word["text"], "pos": cur_pos, "sense": word["sense"]})\
-                            
-    return sentences
+                        sense_sentence.append({"word": word["text"], "pos": cur_pos, "sense": word["sense"]})\
+                         
+    return [sentences, sense_sentences]
 
 
 """
@@ -160,7 +134,8 @@ if __name__ == "__main__":
     
     #sentences = getTokenizedSentences("letters", "all")
     #pp.pprint()
-    getSenses("/written/letters/112C-L014.txt")
+    pp.pprint(getRawSentences("/written/letters/112C-L014.txt"))
+    
     #compare_word_same_sense(sentences)
 
     
