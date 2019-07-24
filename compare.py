@@ -35,6 +35,39 @@ def compare_word_same_sense(tokenized_sentences):
 	print(stds)
 
 
+def BreakToString(break_level):
+    if break_level == "NO_BREAK" or break_level == "SENTENCE_BREAK":
+        return ""
+    else:
+        return " "
+
+"""
+Accepts a single word in string format as a parameter. It then searches through
+the specified document for all sentences containing that word. A list of lists is then created
+where the inner list contains the relevant sentences and the position of the word of interest
+in those sentences. This list of lists is then returned.
+"""
+def getTokenizedSentences(docname):
+    with open("googledata.json") as json_file:
+        data = json.load(json_file)
+
+        exampleSentences = []
+
+        for document in data:
+            if document["docname"] == docname or docname == "all":
+                wordList = document["doc"]
+                exampleSentences.extend(makeSentences(wordList))
+        return exampleSentences
+
+def makeSentences(wordList):
+    sentence = ""
+    sentences = []
+    for word in wordList:
+        if word["break_level"] == "SENTENCE_BREAK":
+            sentences.append(sentence)
+            sentence = ""
+        sentence += BreakToString(word["break_level"]) + word["text"]
+    return sentences
 
 def getRawSentencesAndSenses(docname):
     with open("googledata.json") as json_file:
@@ -66,51 +99,6 @@ def getRawSentencesAndSenses(docname):
     return [sentences, sense_sentences]
 
 
-"""
-Accepts a single word in string format as a parameter. It then searches through
-the specified document for all sentences containing that word. A list of lists is then created
-where the inner list contains the relevant sentences and the position of the word of interest
-in those sentences. This list of lists is then returned.
-"""
-def getTokenizedSentences(word, docname):
-    with open("googledata.json") as json_file:
-        data = json.load(json_file)
-
-        exampleSentences = []
-
-        for document in data:
-            if document["docname"] == docname or docname == "all":
-                wordList = document["doc"]
-                exampleSentences.extend(makeSentences(wordList, word))
-        return exampleSentences
-
-def makeSentences(wordList, word):
-    cur_pos = 0
-    sentence = ""
-    sentences = []
-    word_pos = -1
-    for x in range(len(wordList)):
-        sentence += wordList[x]["text"]
-
-        # Note: word_pos will be overwritten if the word occurs more than once
-        if wordList[x]["text"] == word and "sense" in wordList[x]:
-            word_pos = cur_pos
-        cur_pos += 1
-        if wordList[x]["text"] == ".":
-            
-            # only add the sentence if it contains the word of interest
-            # and if that word has a sense
-            if word_pos is not -1:
-                sentences.append([sentence, word_pos])
-
-            cur_pos = 0
-            sentence = ""
-            word_pos = -1
-        else:
-            sentence += " "
-    return sentences
-
-
 def TrackRawSentenceIndices(bert_sent):
     tracking = []
     n = 0
@@ -134,7 +122,7 @@ if __name__ == "__main__":
     
     #sentences = getTokenizedSentences("letters", "all")
     #pp.pprint()
-    pp.pprint(getRawSentences("/written/letters/112C-L014.txt"))
+    pp.pprint(getTokenizedSentences("/written/letters/112C-L014.txt"))
     
     #compare_word_same_sense(sentences)
 
