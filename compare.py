@@ -12,27 +12,26 @@ outputs = model(input_ids)
 final_layer = outputs[1][-1]
 """
 def compare_word_same_sense(tokenized_sentences):
-	# set up the model
-	config = BertConfig.from_pretrained('bert-base-uncased')
-	config.output_hidden_states=True
-	tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-	model = BertForSequenceClassification(config)
-	# iterate through sentences and extract the representation of the word
-	stack = []
-	for sentence in tokenized_sentences:
-		index = sentence[1] # the position the word is at
-		sentence = sentence[0] # the sentence string
-		input_ids = torch.tensor(tokenizer.encode(sentence)).unsqueeze(0) # tokenize the sentence
-		outputs = model(input_ids) # compute
-		final_layer = outputs[1][-1]
-		representation = final_layer[0][index] # extract the representation of the word
-		stack.append(representation)
-	print("A peek at the representation of the words with the same definition:")
-	print(stack[:3])
-	compiled = torch.stack(stack)
-	print("standard deviation of each entry:")
-	stds = compiled.float().std(dim=0)
-	print(stds)
+    # set up the model
+    config = BertConfig.from_pretrained('bert-base-uncased')
+    #config.output_hidden_states=True
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    model = BertModel(config)
+    # iterate through sentences and extract the representation of the word
+    stack = []
+    for (sentence, index) in tokenized_sentences:
+        input_ids = torch.tensor(tokenizer.encode(sentence)).unsqueeze(0) # tokenize the sentence
+        outputs = model(input_ids) # compute
+        final_layer = outputs[0].squeeze(0)
+        print(final_layer.shape)
+        representation = final_layer[0][index] # extract the representation of the word
+        stack.append(representation)
+    print("A peek at the representation of the words with the same definition:")
+    print(stack[:3])
+    compiled = torch.stack(stack)
+    print("standard deviation of each entry:")
+    stds = compiled.float().std(dim=0)
+    print(stds)
 
 
 def BreakToString(break_level):
@@ -135,7 +134,7 @@ def getFormattedData(docname):
 
 def trackRawSentenceIndices(bert_sent):
     tracking = []
-    n = 0
+    n = -1
     for bert_word in bert_sent:
         if not bert_word.startswith("##"):
             n += 1
@@ -149,6 +148,29 @@ def getBertSentenceFromRaw(raw_sent):
         bert_tokens = tokenizer.tokenize(raw_word)
         bert_sent_list += bert_tokens
     return bert_sent_list
+
+def getSentencesBySense(sense):
+    filtered_sentences = []
+    with open("formattedgoogledata.json", "r") as f:
+        data = json.load(f)
+        for sentence in data:
+            for word_with_sense in sentence["senses"]:
+                if word_with_sense["sense"] == sense:
+                    filtered_sentences.append(sentence)
+    return filtered_sentences
+
+def getSentencesByWord(word):
+    filtered_sentences = []
+    with open("formattedgoogledata.json", "r") as f:
+        data = json.load(f)
+        for sentence in data:
+            if word in sentence["sent"]:
+                filtered_sentences.append(sentence)
+    return filtered_sentences
+
+
+
+
 
 
 if __name__ == "__main__":
