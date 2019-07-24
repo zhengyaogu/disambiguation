@@ -35,6 +35,35 @@ def compare_word_same_sense(tokenized_sentences):
 	print(stds)
 
 
+
+
+"""
+Convert the specified document from the json file to a list of sentences,
+where each sentence is stored as a list of words.
+"""
+def getRawSentences(docname):
+    with open("googledata.json") as json_file:
+        data = json.load(json_file)
+
+        sentences = []
+        for document in data:
+            if document["docname"] == docname or docname == "all":
+                wordList = document["doc"]
+                sentences = []
+                sentence = []
+                for x in range(len(wordList)):
+                    
+                    if wordList[x]["break_level"] == "SENTENCE_BREAK":
+                        print(sentence)
+                        sentences.append(sentence)
+                        sentence = []
+                    sentence.append(wordList[x]["text"])
+
+    return sentences
+
+
+
+
 """
 Accepts a single word in string format as a parameter. It then searches through
 the specified document for all sentences containing that word. A list of lists is then created
@@ -79,16 +108,13 @@ def makeSentences(wordList, word):
             sentence += " "
     return sentences
 
-        
-    
-
 
 if __name__ == "__main__":
     pp = pprint.PrettyPrinter(indent=4)
     
-    sentences = getTokenizedSentences("letters", "all")
-    pp.pprint(sentences)
-
+    #sentences = getTokenizedSentences("letters", "all")
+    #pp.pprint()
+    getRawSentences("all")
     #compare_word_same_sense(sentences)
 
     
