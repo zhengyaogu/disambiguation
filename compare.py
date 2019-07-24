@@ -59,47 +59,70 @@ def getTokenizedSentences(docname):
                 exampleSentences.extend(makeSentences(wordList))
         return exampleSentences
 
-def makeSentences(wordList):
-    sentence = ""
+
+# Makes an english readable sentence from a list of word objects(
+# dictionaries from the json file). Returns the sentence as a string.
+def makeSentence(json_sent):
+    sent = ""
+    for word in json_sent:
+        sent += BreakToString(word["break_level"]) + word["text"]
+    return sent
+
+def makeRawSentence(json_sent):
+    sent = []
+    for word in json_sent:
+        sent.append(word["text"])
+    return sent
+
+def makeSenseSentence(json_sent):
+    senses = []
+    cur_pos = 0
+    for word in json_sent:
+        if "sense" in word:
+            senses.append({"word": word["text"], "pos": cur_pos, "sense": word["sense"]})
+        cur_pos += 1
+    return senses      
+
+def makeBertSentence(raw_sent):
+    return getBertSentenceFromRaw(raw_sent)
+
+def makeTracking(bert_sent):
+    return trackRawSentenceIndices(bert_sent)
+
+def getJsonSentences(data):
+    sentence = []
     sentences = []
-    for word in wordList:
+    for word in data:
         if word["break_level"] == "SENTENCE_BREAK":
             sentences.append(sentence)
-            sentence = ""
-        sentence += BreakToString(word["break_level"]) + word["text"]
+            sentence = []
+        sentence.append(word)
     return sentences
 
-def getRawSentencesAndSenses(docname):
+def getFormattedData(docname):
+    data = None
+    relevant_data = None
     with open("googledata.json") as json_file:
         data = json.load(json_file)
 
-        sentences = []
-        for document in data:
-            if document["docname"] == docname or docname == "all":
-                wordList = document["doc"]
-                sentences = []
-                sentence = []
-                sense_sentence = []
-                sense_sentences = []
-                cur_pos = -1
-                for word in wordList:
-                    cur_pos += 1
-                    if word["break_level"] == "SENTENCE_BREAK":
-                        print(sentence)
-                        sentences.append(sentence)
-                        sense_sentences.append(sense_sentence)
-                        sentence = []
-                        sense_sentence = []
-                        cur_pos = 0
+    relevant_data = []
+    for document in data:
+        if document["docname"] == docname or docname == "all":
+            relevant_data.extend(document["doc"])
 
-                    sentence.append(word["text"])
-                    if "sense" in word:
-                        sense_sentence.append({"word": word["text"], "pos": cur_pos, "sense": word["sense"]})\
-                         
-    return [sentences, sense_sentences]
+    formatted_data = []
+    for sent in getJsonSentences(relevant_data):
+        sent_dict = {}
+        sent_dict["natural_sent"] = makeSentence(sent)
+        sent_dict["sent"] = makeRawSentence(sent)
+        sent_dict["bert_sent"] = makeBertSentence(sent_dict["sent"])
+        sent_dict["tracking"] = makeTracking(sent_dict["bert_sent"])
+        sent_dict["senses"] = makeSenseSentence(sent)
+        formatted_data.append(sent_dict)
+    return formatted_data
 
 
-def TrackRawSentenceIndices(bert_sent):
+def trackRawSentenceIndices(bert_sent):
     tracking = []
     n = 0
     for bert_word in bert_sent:
@@ -122,7 +145,7 @@ if __name__ == "__main__":
     
     #sentences = getTokenizedSentences("letters", "all")
     #pp.pprint()
-    pp.pprint(getTokenizedSentences("/written/letters/112C-L014.txt"))
+    pp.pprint(getFormattedData("/written/letters/112C-L014.txt"))
     
     #compare_word_same_sense(sentences)
 
