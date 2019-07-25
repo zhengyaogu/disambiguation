@@ -42,6 +42,7 @@ def BreakToString(break_level):
         return " "
 
 """
+Note: the make*(json_sent) functions are no longer called
 This function uses the json sentence to create an english readable 
 sentence. This sentence is referred to elsewhere as natural_sent.
 """
@@ -95,13 +96,15 @@ def getJsonSentences(data):
     return sentences
 
 """
+This function is intended to be used only by getFormattedData
+"""
+def loadAndFormatData(docnames):
+    with open("googledata.json") as json_file:
+        return getFormattedData(docnames, json.load(json_file))
+"""
 This function converts all the specified documents into our second json format.
 """
-def getFormattedData(docnames):
-    data = None
-    with open("googledata.json") as json_file:
-        data = json.load(json_file)
-
+def getFormattedData(docnames, data):
     formatted_data = []
     for document in data:
         if document["docname"] in docnames or "all" in docnames:
