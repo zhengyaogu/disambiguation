@@ -69,10 +69,6 @@ def makeBertSentence(raw_sent):
 def makeTracking(bert_sent):
     return trackRawSentenceIndices(bert_sent)
 
-def combinedDataFormatting(json_sent):
-    
-
-
 def getJsonSentences(data):
     sentence = []
     sentences = []
