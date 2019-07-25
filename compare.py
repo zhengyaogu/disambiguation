@@ -31,27 +31,46 @@ def compare_word_same_sense(tokenized_sentences):
     stds = compiled.float().std(dim=0)
     print(stds)
 
-
+"""
+This helper function returns the correct string to use when creating the
+natural sentence, based on the specified break level.
+"""
 def BreakToString(break_level):
     if break_level == "NO_BREAK" or break_level == "SENTENCE_BREAK":
         return ""
     else:
         return " "
 
-# Makes an english readable sentence from a list of word objects(
-# dictionaries from the json file). Returns the sentence as a string.
+"""
+Note: the make*(json_sent) functions are no longer called
+This function uses the json sentence to create an english readable 
+sentence. This sentence is referred to elsewhere as natural_sent.
+"""
 def makeSentence(json_sent):
     sent = ""
     for word in json_sent:
         sent += BreakToString(word["break_level"]) + word["text"]
     return sent
 
+
+"""
+This function uses the json sentence to create a list of the words
+contained in the json sentence. This list is referred to elsewhere
+as raw_sent.
+"""
 def makeRawSentence(json_sent):
     sent = []
     for word in json_sent:
         sent.append(word["text"])
     return sent
 
+
+"""
+This function uses the json sentence to create a list of dictionaries.
+A dictionary is only created for words that have a sense attribute in the
+json sentence. The output of this function is referred to elsewhere as 
+senses.
+"""
 def makeSenseSentence(json_sent):
     senses = []
     cur_pos = 0
@@ -61,6 +80,11 @@ def makeSenseSentence(json_sent):
         cur_pos += 1
     return senses      
 
+"""
+This function processes a single documents data. It scans through the words
+until it finds a sentence break and uses this to return a list of all the sentences
+in the document, where each sentence is a list of words.
+"""
 def getJsonSentences(data):
     sentence = []
     sentences = []
@@ -71,11 +95,16 @@ def getJsonSentences(data):
         sentence.append(word)
     return sentences
 
-def getFormattedData(docnames):
-    data = None
+"""
+This function is intended to be used only by getFormattedData
+"""
+def loadAndFormatData(docnames):
     with open("googledata.json") as json_file:
-        data = json.load(json_file)
-
+        return getFormattedData(docnames, json.load(json_file))
+"""
+This function converts all the specified documents into our second json format.
+"""
+def getFormattedData(docnames, data):
     formatted_data = []
     for document in data:
         if document["docname"] in docnames or "all" in docnames:
@@ -87,8 +116,12 @@ def getFormattedData(docnames):
             print("finished processing the document: " + document["docname"])
     return formatted_data
     
-
+"""
+This helper function aids getFormattedData by creating the 'sentence' dictionaries
+and appending them to the sent formatted_data list.
+"""
 def createSentenceDictionaries(document_data, list_to_modify):
+    sent_dict = {}
     for sent in getJsonSentences(document_data):
         natural_sent = ""
         raw_sent = []
