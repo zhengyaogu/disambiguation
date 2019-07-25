@@ -91,11 +91,7 @@ def makeTracking(bert_sent):
 def getJsonSentences(data):
     sentence = []
     sentences = []
-    word_num = 0
     for word in data:
-        word_num += 1
-        if word_num % 100000 == 0:
-            print("word_num: ", word_num)
         if word["break_level"] == "SENTENCE_BREAK":
             sentences.append(sentence)
             sentence = []
@@ -110,17 +106,11 @@ def getFormattedData(docname):
 
     relevant_data = []
     for document in data:
-        print(document["docname"])
         if document["docname"] == docname or docname == "all":
             relevant_data.extend(document["doc"])
 
     formatted_data = []
-    sent_number = 0
     for sent in getJsonSentences(relevant_data):
-        sent_number += 1
-        if sent_number%100 == 0:
-            print(sent_number)
-
         sent_dict = {}
         sent_dict["natural_sent"] = makeSentence(sent)
         sent_dict["sent"] = makeRawSentence(sent)
@@ -128,18 +118,26 @@ def getFormattedData(docname):
         sent_dict["tracking"] = makeTracking(sent_dict["bert_sent"])
         sent_dict["senses"] = makeSenseSentence(sent)
         formatted_data.append(sent_dict)
-    print(sent_number)
     return formatted_data
 
 
-def trackRawSentenceIndices(bert_sent):
+def trackRawSentenceIndices(raw_sent, bert_sent):
     tracking = []
-    n = -1
-    for bert_word in bert_sent:
-        if not bert_word.startswith("##"):
-            n += 1
-        tracking.append(n)
+    n = 0
+    i = 0 #keep track of the current word in bert_sent
+    for raw_word in raw_sent:
+        while i < len(bert_sent):
+            if raw_word == "":
+                break
+            curr_bert = bert_sent[i]
+            if curr_bert.startswith("##"):
+                curr_bert = curr_bert[2:]
+            tracking.append(n)
+            raw_word = raw_word[len(curr_bert):]
+            i += 1
+        n += 1
     return tracking
+
 
 def getBertSentenceFromRaw(raw_sent):
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
@@ -178,9 +176,8 @@ if __name__ == "__main__":
     
     #sentences = getTokenizedSentences("letters", "all")
     #pp.pprint()
-    formatted_data = getFormattedData("all")
-    with open("formattedgoogledata.json", "w") as json_file:
-        json.dump(formatted_data, json_file, indent=4)
+    pp.pprint(getFormattedData("/written/letters/112C-L014.txt"))
+    
     #compare_word_same_sense(sentences)
 
     
