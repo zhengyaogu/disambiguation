@@ -63,12 +63,6 @@ def makeSenseSentence(json_sent):
         cur_pos += 1
     return senses      
 
-def makeBertSentence(raw_sent):
-    return getBertSentenceFromRaw(raw_sent)
-
-def makeTracking(bert_sent):
-    return trackRawSentenceIndices(bert_sent)
-
 def getJsonSentences(data):
     sentence = []
     sentences = []
@@ -103,13 +97,13 @@ def createSentenceDictionaries(document_data, list_to_modify):
         senses = []
         cur_pos = 0
         for word in sent:
-            raw_sent.append(word)
+            raw_sent.append(word["text"])
             natural_sent += BreakToString(word["break_level"]) + word["text"]
-            if "senese" in word:
+            if "sense" in word:
                 senses.append({"word": word["text"], "pos": cur_pos, "sense": word["sense"]})
             cur_pos += 1
         bert_sent = getBertSentenceFromRaw(raw_sent)
-        tracking = trackRawSentenceIndices(bert_sent)
+        tracking = trackRawSentenceIndices(raw_sent, bert_sent)
 
         sent_dict = {}
         sent_dict["natural_sent"] = natural_sent
@@ -118,7 +112,7 @@ def createSentenceDictionaries(document_data, list_to_modify):
         sent_dict["tracking"] = tracking
         sent_dict["senses"] = senses
         list_to_modify.append(sent_dict)
-        return sent_dict
+    return sent_dict
 
 
 def trackRawSentenceIndices(raw_sent, bert_sent):
@@ -151,26 +145,28 @@ def getSentencesBySense(sense):
     filtered_sentences = []
     with open("formattedgoogledata.json", "r") as f:
         data = json.load(f)
-        for sentence in data:
-            for word_with_sense in sentence["senses"]:
-                if word_with_sense["sense"] == sense:
-                    filtered_sentences.append(sentence)
-    return filtered_sentences
+        for doc in data:
+            for sentence in doc["doc"]:
+                for word_with_sense in sentence["senses"]:
+                    if word_with_sense["sense"] == sense:
+                        filtered_sentences.append(sentence)
+        return filtered_sentences
 
 def getSentencesByWord(word):
     filtered_sentences = []
     with open("formattedgoogledata.json", "r") as f:
         data = json.load(f)
-        for sentence in data:
-            if word in sentence["sent"]:
-                filtered_sentences.append(sentence)
+        for doc in data:
+            for sentence in doc["doc"]:
+                if word in sentence["sent"]:
+                    filtered_sentences.append(sentence)
     return filtered_sentences
 
 
 if __name__ == "__main__":
     documents_to_process = ["all"]
     formatted_data = getFormattedData(documents_to_process)
-    with open("formattedgoogledata2.json", "w") as json_file:
+    with open("formattedgoogledata3.json", "w") as json_file:
         json.dump(formatted_data, json_file, indent=4)
 
     
