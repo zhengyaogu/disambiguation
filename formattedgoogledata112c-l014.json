@@ -1,0 +1,1605 @@
+[
+    {
+        "natural_sent": "/written/letters/112C-L014.txt June 26, 1995 Dear Friend:",
+        "sent": [
+            "/",
+            "written",
+            "/",
+            "letters",
+            "/",
+            "112C",
+            "-",
+            "L014.txt",
+            "June",
+            "26",
+            ",",
+            "1995",
+            "Dear",
+            "Friend",
+            ":"
+        ],
+        "bert_sent": [
+            "/",
+            "written",
+            "/",
+            "letters",
+            "/",
+            "112",
+            "##c",
+            "-",
+            "l",
+            "##01",
+            "##4",
+            ".",
+            "tx",
+            "##t",
+            "june",
+            "26",
+            ",",
+            "1995",
+            "dear",
+            "friend",
+            ":"
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            5,
+            6,
+            7,
+            7,
+            7,
+            8,
+            9,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+        ],
+        "senses": [
+            {
+                "word": "letters",
+                "pos": 3,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1263086.003"
+            },
+            {
+                "word": "Dear",
+                "pos": 12,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1238652.001"
+            }
+        ]
+    },
+    {
+        "natural_sent": "This is not newsletter.",
+        "sent": [
+            "This",
+            "is",
+            "not",
+            "newsletter",
+            "."
+        ],
+        "bert_sent": [
+            "this",
+            "is",
+            "not",
+            "newsletter",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "senses": [
+            {
+                "word": "is",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1225404.008"
+            },
+            {
+                "word": "not",
+                "pos": 2,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1272156.001"
+            }
+        ]
+    },
+    {
+        "natural_sent": "It is a fund-raising appeal.",
+        "sent": [
+            "It",
+            "is",
+            "a",
+            "fund",
+            "-",
+            "raising",
+            "appeal",
+            "."
+        ],
+        "bert_sent": [
+            "it",
+            "is",
+            "a",
+            "fund",
+            "-",
+            "raising",
+            "appeal",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        ],
+        "senses": [
+            {
+                "word": "is",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1225404.008"
+            },
+            {
+                "word": "raising",
+                "pos": 5,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1282868.018"
+            },
+            {
+                "word": "appeal",
+                "pos": 6,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1222471.006"
+            }
+        ]
+    },
+    {
+        "natural_sent": "But there's no reason why we shouldn't share good news at the same time.",
+        "sent": [
+            "But",
+            "there",
+            "'s",
+            "no",
+            "reason",
+            "why",
+            "we",
+            "should",
+            "n't",
+            "share",
+            "good",
+            "news",
+            "at",
+            "the",
+            "same",
+            "time",
+            "."
+        ],
+        "bert_sent": [
+            "but",
+            "there",
+            "'",
+            "s",
+            "no",
+            "reason",
+            "why",
+            "we",
+            "should",
+            "n",
+            "'",
+            "t",
+            "share",
+            "good",
+            "news",
+            "at",
+            "the",
+            "same",
+            "time",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+        ],
+        "senses": [
+            {
+                "word": "reason",
+                "pos": 4,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1283330.001"
+            },
+            {
+                "word": "should",
+                "pos": 7,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1290273.001"
+            },
+            {
+                "word": "same",
+                "pos": 14,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1286917.001"
+            }
+        ]
+    },
+    {
+        "natural_sent": "Federal, state and local governments are freezing or withdrawing much-needed funding sources for people who are truly in need.",
+        "sent": [
+            "Federal",
+            ",",
+            "state",
+            "and",
+            "local",
+            "governments",
+            "are",
+            "freezing",
+            "or",
+            "withdrawing",
+            "much",
+            "-",
+            "needed",
+            "funding",
+            "sources",
+            "for",
+            "people",
+            "who",
+            "are",
+            "truly",
+            "in",
+            "need",
+            "."
+        ],
+        "bert_sent": [
+            "federal",
+            ",",
+            "state",
+            "and",
+            "local",
+            "governments",
+            "are",
+            "freezing",
+            "or",
+            "withdrawing",
+            "much",
+            "-",
+            "needed",
+            "funding",
+            "sources",
+            "for",
+            "people",
+            "who",
+            "are",
+            "truly",
+            "in",
+            "need",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22
+        ],
+        "senses": [
+            {
+                "word": "state",
+                "pos": 2,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1293954.006"
+            },
+            {
+                "word": "governments",
+                "pos": 5,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1251680.001"
+            },
+            {
+                "word": "freezing",
+                "pos": 7,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1248986.014"
+            },
+            {
+                "word": "withdrawing",
+                "pos": 9,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1306775.001"
+            },
+            {
+                "word": "needed",
+                "pos": 12,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1270832.001"
+            },
+            {
+                "word": "funding",
+                "pos": 13,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1249538.001"
+            },
+            {
+                "word": "people",
+                "pos": 16,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1276782.001"
+            },
+            {
+                "word": "are",
+                "pos": 18,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1225404.008"
+            },
+            {
+                "word": "truly",
+                "pos": 19,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1300679.003"
+            },
+            {
+                "word": "need",
+                "pos": 21,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1270832.008"
+            }
+        ]
+    },
+    {
+        "natural_sent": "In spite of that, Pleasant Run Children's Homes, with the help of hundreds of volunteers and others who really care, continues to make a significant impact on the futures of families and kids in need of help.",
+        "sent": [
+            "In",
+            "spite",
+            "of",
+            "that",
+            ",",
+            "Pleasant",
+            "Run",
+            "Children",
+            "'s",
+            "Homes",
+            ",",
+            "with",
+            "the",
+            "help",
+            "of",
+            "hundreds",
+            "of",
+            "volunteers",
+            "and",
+            "others",
+            "who",
+            "really",
+            "care",
+            ",",
+            "continues",
+            "to",
+            "make",
+            "a",
+            "significant",
+            "impact",
+            "on",
+            "the",
+            "futures",
+            "of",
+            "families",
+            "and",
+            "kids",
+            "in",
+            "need",
+            "of",
+            "help",
+            "."
+        ],
+        "bert_sent": [
+            "in",
+            "spite",
+            "of",
+            "that",
+            ",",
+            "pleasant",
+            "run",
+            "children",
+            "'",
+            "s",
+            "homes",
+            ",",
+            "with",
+            "the",
+            "help",
+            "of",
+            "hundreds",
+            "of",
+            "volunteers",
+            "and",
+            "others",
+            "who",
+            "really",
+            "care",
+            ",",
+            "continues",
+            "to",
+            "make",
+            "a",
+            "significant",
+            "impact",
+            "on",
+            "the",
+            "futures",
+            "of",
+            "families",
+            "and",
+            "kids",
+            "in",
+            "need",
+            "of",
+            "help",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42
+        ],
+        "senses": [
+            {
+                "word": "help",
+                "pos": 13,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1254325.010"
+            },
+            {
+                "word": "really",
+                "pos": 21,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1283295.001"
+            },
+            {
+                "word": "care",
+                "pos": 22,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1230840.005"
+            },
+            {
+                "word": "continues",
+                "pos": 24,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1235657.001"
+            },
+            {
+                "word": "make",
+                "pos": 26,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1265484.008"
+            },
+            {
+                "word": "significant",
+                "pos": 28,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1290641.001"
+            },
+            {
+                "word": "futures",
+                "pos": 32,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1249669.001"
+            },
+            {
+                "word": "families",
+                "pos": 34,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1246175.001"
+            },
+            {
+                "word": "kids",
+                "pos": 36,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1260944.001"
+            },
+            {
+                "word": "need",
+                "pos": 38,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1270832.008"
+            },
+            {
+                "word": "help",
+                "pos": 40,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1254325.010"
+            }
+        ]
+    },
+    {
+        "natural_sent": "We all hear about today's increases in neglect, abuse and abandonment of those who can't fight back: children.",
+        "sent": [
+            "We",
+            "all",
+            "hear",
+            "about",
+            "today",
+            "'s",
+            "increases",
+            "in",
+            "neglect",
+            ",",
+            "abuse",
+            "and",
+            "abandonment",
+            "of",
+            "those",
+            "who",
+            "ca",
+            "n't",
+            "fight",
+            "back",
+            ":",
+            "children",
+            "."
+        ],
+        "bert_sent": [
+            "we",
+            "all",
+            "hear",
+            "about",
+            "today",
+            "'",
+            "s",
+            "increases",
+            "in",
+            "neglect",
+            ",",
+            "abuse",
+            "and",
+            "abandonment",
+            "of",
+            "those",
+            "who",
+            "ca",
+            "n",
+            "'",
+            "t",
+            "fight",
+            "back",
+            ":",
+            "children",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25
+        ],
+        "senses": [
+            {
+                "word": "abuse",
+                "pos": 10,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1219457.009"
+            }
+        ]
+    },
+    {
+        "natural_sent": "Yet few of us hear enough about kids who live through these adversities and do make the grade.",
+        "sent": [
+            "Yet",
+            "few",
+            "of",
+            "us",
+            "hear",
+            "enough",
+            "about",
+            "kids",
+            "who",
+            "live",
+            "through",
+            "these",
+            "adversities",
+            "and",
+            "do",
+            "make",
+            "the",
+            "grade",
+            "."
+        ],
+        "bert_sent": [
+            "yet",
+            "few",
+            "of",
+            "us",
+            "hear",
+            "enough",
+            "about",
+            "kids",
+            "who",
+            "live",
+            "through",
+            "these",
+            "ad",
+            "##vers",
+            "##ities",
+            "and",
+            "do",
+            "make",
+            "the",
+            "grade",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            12,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+        ],
+        "senses": [
+            {
+                "word": "enough",
+                "pos": 5,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1244241.005"
+            },
+            {
+                "word": "kids",
+                "pos": 7,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1260944.001"
+            },
+            {
+                "word": "live",
+                "pos": 9,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1263900.001"
+            },
+            {
+                "word": "do",
+                "pos": 14,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1241237.039"
+            },
+            {
+                "word": "make",
+                "pos": 15,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1265484.008"
+            },
+            {
+                "word": "grade",
+                "pos": 17,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1251731.001"
+            }
+        ]
+    },
+    {
+        "natural_sent": "The positive side.",
+        "sent": [
+            "The",
+            "positive",
+            "side",
+            "."
+        ],
+        "bert_sent": [
+            "the",
+            "positive",
+            "side",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "senses": [
+            {
+                "word": "positive",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1279713.001"
+            },
+            {
+                "word": "side",
+                "pos": 2,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1290484.015"
+            }
+        ]
+    },
+    {
+        "natural_sent": "These are special children.",
+        "sent": [
+            "These",
+            "are",
+            "special",
+            "children",
+            "."
+        ],
+        "bert_sent": [
+            "these",
+            "are",
+            "special",
+            "children",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "senses": [
+            {
+                "word": "are",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1225404.008"
+            }
+        ]
+    },
+    {
+        "natural_sent": "They come into a Pleasant Run program... whether it's for therapeutic help in their own homes (which nurtures whole families), through foster care families or in the familial surroundings of our residential homes.",
+        "sent": [
+            "They",
+            "come",
+            "into",
+            "a",
+            "Pleasant",
+            "Run",
+            "program",
+            "...",
+            "whether",
+            "it",
+            "'s",
+            "for",
+            "therapeutic",
+            "help",
+            "in",
+            "their",
+            "own",
+            "homes",
+            "(",
+            "which",
+            "nurtures",
+            "whole",
+            "families",
+            ")",
+            ",",
+            "through",
+            "foster",
+            "care",
+            "families",
+            "or",
+            "in",
+            "the",
+            "familial",
+            "surroundings",
+            "of",
+            "our",
+            "residential",
+            "homes",
+            "."
+        ],
+        "bert_sent": [
+            "they",
+            "come",
+            "into",
+            "a",
+            "pleasant",
+            "run",
+            "program",
+            ".",
+            ".",
+            ".",
+            "whether",
+            "it",
+            "'",
+            "s",
+            "for",
+            "therapeutic",
+            "help",
+            "in",
+            "their",
+            "own",
+            "homes",
+            "(",
+            "which",
+            "nur",
+            "##tures",
+            "whole",
+            "families",
+            ")",
+            ",",
+            "through",
+            "foster",
+            "care",
+            "families",
+            "or",
+            "in",
+            "the",
+            "fa",
+            "##mi",
+            "##lia",
+            "##l",
+            "surroundings",
+            "of",
+            "our",
+            "residential",
+            "homes",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            35,
+            35,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41
+        ],
+        "senses": [
+            {
+                "word": "come",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1234657.001"
+            },
+            {
+                "word": "program",
+                "pos": 6,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1281018.001"
+            },
+            {
+                "word": "help",
+                "pos": 13,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1254325.010"
+            },
+            {
+                "word": "own",
+                "pos": 16,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1274748.001"
+            },
+            {
+                "word": "homes",
+                "pos": 17,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1255439.001"
+            },
+            {
+                "word": "whole",
+                "pos": 21,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1306243.001"
+            },
+            {
+                "word": "families",
+                "pos": 22,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1246175.001"
+            },
+            {
+                "word": "care",
+                "pos": 27,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1230840.001"
+            },
+            {
+                "word": "homes",
+                "pos": 37,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1255439.006"
+            }
+        ]
+    },
+    {
+        "natural_sent": "For some, it's a matter of weeks or months; for others, it's years.",
+        "sent": [
+            "For",
+            "some",
+            ",",
+            "it",
+            "'s",
+            "a",
+            "matter",
+            "of",
+            "weeks",
+            "or",
+            "months",
+            ";",
+            "for",
+            "others",
+            ",",
+            "it",
+            "'s",
+            "years",
+            "."
+        ],
+        "bert_sent": [
+            "for",
+            "some",
+            ",",
+            "it",
+            "'",
+            "s",
+            "a",
+            "matter",
+            "of",
+            "weeks",
+            "or",
+            "months",
+            ";",
+            "for",
+            "others",
+            ",",
+            "it",
+            "'",
+            "s",
+            "years",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+        ],
+        "senses": [
+            {
+                "word": "years",
+                "pos": 17,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1307589.002"
+            }
+        ]
+    },
+    {
+        "natural_sent": "They leave Pleasant Run, generally, ready and able to contribute to society.",
+        "sent": [
+            "They",
+            "leave",
+            "Pleasant",
+            "Run",
+            ",",
+            "generally",
+            ",",
+            "ready",
+            "and",
+            "able",
+            "to",
+            "contribute",
+            "to",
+            "society",
+            "."
+        ],
+        "bert_sent": [
+            "they",
+            "leave",
+            "pleasant",
+            "run",
+            ",",
+            "generally",
+            ",",
+            "ready",
+            "and",
+            "able",
+            "to",
+            "contribute",
+            "to",
+            "society",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+        ],
+        "senses": [
+            {
+                "word": "leave",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1262701.001"
+            },
+            {
+                "word": "generally",
+                "pos": 5,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1250428.001"
+            },
+            {
+                "word": "ready",
+                "pos": 7,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1283265.001"
+            },
+            {
+                "word": "able",
+                "pos": 9,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1219312.001"
+            },
+            {
+                "word": "society",
+                "pos": 13,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1292023.001"
+            }
+        ]
+    },
+    {
+        "natural_sent": "We're proud of our children and all that they overcome.",
+        "sent": [
+            "We",
+            "'re",
+            "proud",
+            "of",
+            "our",
+            "children",
+            "and",
+            "all",
+            "that",
+            "they",
+            "overcome",
+            "."
+        ],
+        "bert_sent": [
+            "we",
+            "'",
+            "re",
+            "proud",
+            "of",
+            "our",
+            "children",
+            "and",
+            "all",
+            "that",
+            "they",
+            "overcome",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "senses": [
+            {
+                "word": "proud",
+                "pos": 2,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1281361.001"
+            }
+        ]
+    },
+    {
+        "natural_sent": "We are a not-for-profit, multi-service agency.",
+        "sent": [
+            "We",
+            "are",
+            "a",
+            "not",
+            "-",
+            "for",
+            "-",
+            "profit",
+            ",",
+            "multi-service",
+            "agency",
+            "."
+        ],
+        "bert_sent": [
+            "we",
+            "are",
+            "a",
+            "not",
+            "-",
+            "for",
+            "-",
+            "profit",
+            ",",
+            "multi",
+            "-",
+            "service",
+            "agency",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+        ],
+        "senses": [
+            {
+                "word": "are",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1225404.008"
+            },
+            {
+                "word": "not",
+                "pos": 3,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1272156.004"
+            },
+            {
+                "word": "agency",
+                "pos": 10,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1220393.001"
+            }
+        ]
+    },
+    {
+        "natural_sent": "We wouldn't exist if the need weren't there.",
+        "sent": [
+            "We",
+            "would",
+            "n't",
+            "exist",
+            "if",
+            "the",
+            "need",
+            "were",
+            "n't",
+            "there",
+            "."
+        ],
+        "bert_sent": [
+            "we",
+            "would",
+            "n",
+            "'",
+            "t",
+            "exist",
+            "if",
+            "the",
+            "need",
+            "were",
+            "n",
+            "'",
+            "t",
+            "there",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+        ],
+        "senses": [
+            {
+                "word": "would",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1307187.002"
+            },
+            {
+                "word": "exist",
+                "pos": 3,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1245533.001"
+            },
+            {
+                "word": "need",
+                "pos": 6,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1270832.008"
+            },
+            {
+                "word": "were",
+                "pos": 7,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1225404.016"
+            }
+        ]
+    },
+    {
+        "natural_sent": "The numbers of children who deserve our services are rising... as quickly as our programs can grow to serve them.",
+        "sent": [
+            "The",
+            "numbers",
+            "of",
+            "children",
+            "who",
+            "deserve",
+            "our",
+            "services",
+            "are",
+            "rising",
+            "...",
+            "as",
+            "quickly",
+            "as",
+            "our",
+            "programs",
+            "can",
+            "grow",
+            "to",
+            "serve",
+            "them",
+            "."
+        ],
+        "bert_sent": [
+            "the",
+            "numbers",
+            "of",
+            "children",
+            "who",
+            "deserve",
+            "our",
+            "services",
+            "are",
+            "rising",
+            ".",
+            ".",
+            ".",
+            "as",
+            "quickly",
+            "as",
+            "our",
+            "programs",
+            "can",
+            "grow",
+            "to",
+            "serve",
+            "them",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+        ],
+        "senses": [
+            {
+                "word": "numbers",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1272399.003"
+            },
+            {
+                "word": "services",
+                "pos": 7,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1289310.001"
+            },
+            {
+                "word": "rising",
+                "pos": 9,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1285302.024"
+            },
+            {
+                "word": "programs",
+                "pos": 15,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1281018.001"
+            },
+            {
+                "word": "can",
+                "pos": 16,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1230339.001"
+            },
+            {
+                "word": "grow",
+                "pos": 17,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1252535.006"
+            }
+        ]
+    },
+    {
+        "natural_sent": "Please help us help them.",
+        "sent": [
+            "Please",
+            "help",
+            "us",
+            "help",
+            "them",
+            "."
+        ],
+        "bert_sent": [
+            "please",
+            "help",
+            "us",
+            "help",
+            "them",
+            "."
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "senses": [
+            {
+                "word": "help",
+                "pos": 1,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1254325.001"
+            },
+            {
+                "word": "help",
+                "pos": 3,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1254325.001"
+            }
+        ]
+    },
+    {
+        "natural_sent": "Pleasant Run Children's Homes... ``where good kids get better.''",
+        "sent": [
+            "Pleasant",
+            "Run",
+            "Children",
+            "'s",
+            "Homes",
+            "...",
+            "``",
+            "where",
+            "good",
+            "kids",
+            "get",
+            "better",
+            ".",
+            "''"
+        ],
+        "bert_sent": [
+            "pleasant",
+            "run",
+            "children",
+            "'",
+            "s",
+            "homes",
+            ".",
+            ".",
+            ".",
+            "`",
+            "`",
+            "where",
+            "good",
+            "kids",
+            "get",
+            "better",
+            ".",
+            "'",
+            "'"
+        ],
+        "tracking": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+        ],
+        "senses": [
+            {
+                "word": "where",
+                "pos": 7,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1305971.005"
+            },
+            {
+                "word": "good",
+                "pos": 8,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1251501.001"
+            },
+            {
+                "word": "kids",
+                "pos": 9,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1260944.001"
+            },
+            {
+                "word": "get",
+                "pos": 10,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1250696.013"
+            },
+            {
+                "word": "better",
+                "pos": 11,
+                "sense": "/dictionary/sense/en_us_NOAD3e_2012/m_en_us1226175.001"
+            }
+        ]
+    }
+]
