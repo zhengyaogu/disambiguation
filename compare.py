@@ -2,6 +2,7 @@ import torch
 from pytorch_transformers import *
 import json
 import pprint
+import copy
 """
 config = BertConfig.from_pretrained('bert-base-uncased')
 config.output_hidden_states=True
@@ -19,13 +20,10 @@ def compare_word_same_sense(tokenized_sentences):
     model = BertModel(config)
     # iterate through sentences and extract the representation of the word
     stack = []
-    for (sentence, index) in tokenized_sentences:
-        input_ids = torch.tensor(tokenizer.encode(sentence)).unsqueeze(0) # tokenize the sentence
-        outputs = model(input_ids) # compute
-        final_layer = outputs[0].squeeze(0)
-        print(final_layer.shape)
-        representation = final_layer[0][index] # extract the representation of the word
-        stack.append(representation)
+    for sentence_pack in tokenized_sentences:
+        bert_sent = sentence_pack["bert_sent"]
+
+        
     print("A peek at the representation of the words with the same definition:")
     print(stack[:3])
     compiled = torch.stack(stack)
@@ -161,6 +159,7 @@ def getSentencesByWord(word):
                 if word in sentence["sent"]:
                     filtered_sentences.append(sentence)
     return filtered_sentences
+
 
 
 if __name__ == "__main__":
