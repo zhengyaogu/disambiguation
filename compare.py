@@ -160,12 +160,49 @@ def getSentencesByWord(word):
                     filtered_sentences.append(sentence)
     return filtered_sentences
 
+def allWordPairs():
+    tk = BertTokenizer.from_pretrained('bert-base-uncased')
+    word_dict = {}
+    with open("formattedgoogledata3.json", "r") as f:
+        data = json.load(f)
+        for doc in data:
+            for sentence in doc["doc"]:
+                for word in sentence["senses"]:
+                    vocab = word["word"]
+                    tokenized_vocab = tk.tokenize(vocab)
+                    if len(tokenized_vocab) > 1: continue
+                    raw_sent = sentence["sent"]
+                    bert_sent = sentence["bert_sent"]
+                    raw_pos = word["pos"]
+                    tracking = sentence["tracking"]
+                    if not vocab in word_dict.keys():
+                        word_dict[vocab] = []
+                    pos = tracking.index(raw_pos)
+                    word_dict[vocab].append([bert_sent, pos, word["sense"]])
+    pairs = {}
+    for word in word_dict.keys():
+        instances = word_dict[word]
+        pairs_of_word = []
+        if len(instances) <= 1: continue
+        for i in range(len(instances)):
+            j = i + 1
+            while j < len(instances):
+                same_sense = 1 if instances[i][2] == instances[j][2] else 0
+                pairs_of_word.append([instances[i][:2], instances[j][:2], same_sense])
+                j += 1
+        pairs[word] = pairs_of_word
+    print(pairs)
 
 
+
+
+
+
+"""
 if __name__ == "__main__":
     documents_to_process = ["all"]
     formatted_data = getFormattedData(documents_to_process)
     with open("formattedgoogledata3.json", "w") as json_file:
         json.dump(formatted_data, json_file, indent=4)
-
+"""
     
