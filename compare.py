@@ -100,7 +100,7 @@ def getJsonSentences(data):
             sentences.append(sentence)
             sentence = []
         if word["text"] != "":
-        sentence.append(word)
+            sentence.append(word)
     return sentences
 
 def getFormattedData(docnames):
@@ -263,9 +263,9 @@ def unicodeToAscii(s):
 
 
 if __name__ == "__main__":
-    print(unicodeToAscii("fam\u00adily"))
-    #documents_to_process = ["/written/letters/AMC2.txt"]
-    #formatted_data = getFormattedData(documents_to_process)
-    #with open("formattedgoogledata4.json", "w") as json_file:
-        #json.dump(formatted_data, json_file, indent=4)
+    #print(unicodeToAscii("fam\u00adily"))
+    documents_to_process = ["/written/letters/AMC2.txt"]
+    formatted_data = getFormattedData(documents_to_process)
+    with open("formattedgoogledata4.json", "w") as json_file:
+        json.dump(formatted_data, json_file, indent=4)
     
