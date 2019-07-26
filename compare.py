@@ -15,6 +15,30 @@ input_ids = torch.tensor(tokenizer.encode("I am a student")).unsqueeze(0)  # Bat
 outputs = model(input_ids)
 final_layer = outputs[1][-1]
 """
+
+training_files_list = ["/written/letters/112C-L014.txt", 
+                      "/written/blog/Acephalous-Internet.txt",
+                      "/written/email/lists-003-2144868.txt",
+                      "/written/essays/Madame_White_Snake.txt",
+                      "/written/ficlets/1403.txt",
+                      "/written/fiction/A_Wasted_Day.txt",
+                      "/written/govt-docs/chapter-10.txt",
+                      "/written/jokes/jokes7.txt",
+                      "/written/journal/Article247_327.txt",
+                      "/written/movie-script/JurassicParkIV-Scene_3.txt",
+                      "/written/newspaper:newswire/NYTnewswire9.txt",
+                      "/written/non-fiction/chZ.txt",
+                      "/written/spam/111410.txt",
+                      "/written/technical/1471-230X-2-21.txt",
+                      "/written/travel-guides/HistoryGreek.txt",
+                      "/written/twitter/tweets1.txt",
+                      "/spoken/face-to-face/RindnerBonnie.txt",
+                      "/spoken/telephone/sw2015-ms98-a-trans.txt"
+                      ]
+test_files_list = ["/spoken/debate-transcript/2nd_Gore-Bush.txt"]
+
+
+
 def compare_word_same_sense(tokenized_sentences):
     # set up the model
     config = BertConfig.from_pretrained('bert-base-uncased')
