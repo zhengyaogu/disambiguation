@@ -6,15 +6,7 @@ import copy
 import timeit
 import unicodedata
 import string
-"""
-config = BertConfig.from_pretrained('bert-base-uncased')
-config.output_hidden_states=True
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertForSequenceClassification(config)
-input_ids = torch.tensor(tokenizer.encode("I am a student")).unsqueeze(0)  # Batch size 1
-outputs = model(input_ids)
-final_layer = outputs[1][-1]
-"""
+
 
 training_files_list = ["/written/letters/112C-L014.txt", 
                       "/written/blog/Acephalous-Internet.txt",
@@ -39,24 +31,31 @@ test_files_list = ["/spoken/debate-transcript/2nd_Gore-Bush.txt"]
 
 
 
-def compare_word_same_sense(tokenized_sentences):
+def compare_word_same_sense(tokenized_sentence):
     # set up the model
     config = BertConfig.from_pretrained('bert-base-uncased')
     #config.output_hidden_states=True
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     model = BertModel(config)
-    # iterate through sentences and extract the representation of the word
-    stack = []
-    for sentence_pack in tokenized_sentences:
-        bert_sent = sentence_pack["bert_sent"]
 
-        
-    print("A peek at the representation of the words with the same definition:")
-    print(stack[:3])
-    compiled = torch.stack(stack)
-    print("standard deviation of each entry:")
-    stds = compiled.float().std(dim=0)
-    print(stds)
+    sentence = tokenized_sentence[0]
+    pos = tokenized_sentence[1]
+
+    input_ids = torch.tensor(tokenizer.convert_tokens_to_ids(sentence)).unsqueeze(0)
+    outputs = model(input_ids)
+    final_layer = outputs[0].squeeze(0)
+    word_representation = final_layer[pos]
+    print(word_representation)
+
+def vectorizeWordInContext(sentence, pos, tokenizer, model):
+    """
+    take a word and its bert-style tokenized sentence to compute the vectorization in the context of a sentence.
+    return the vector representation of the word
+    """
+    input_ids = torch.tensor(tokenizer.convert_tokens_to_ids(sentence)).unsqueeze(0)
+    outputs = model(input_ids)
+    final_layer = outputs[0].squeeze(0)
+    return final_layer[pos]
 
 
 def BreakToString(break_level):
@@ -238,17 +237,20 @@ def getSentencesByWord(word):
                     filtered_sentences.append(sentence)
     return filtered_sentences
 
-def allWordPairs():
+def allWordPairs(filename):
     "return all the word pairs in a file, compaired in senses"
     tk = BertTokenizer.from_pretrained('bert-base-uncased')
     word_dict = {}
-    with open("googledatanewtracking.json", "r") as f:
+    sent_dict = {}
+    sent_key = 0
+    with open(filename, "r") as f:
         data = json.load(f)
         for doc in data:
             print("converting data in", doc["docname"])
             for sentence in doc["doc"]:
+                sent_dict[sent_key] = sentence["bert_sent"]
                 for word in sentence["senses"]:
-                    vocab = word["word"]
+                    vocab = word["word"].lower()
                     tokenized_vocab = tk.tokenize(vocab)
                     if len(tokenized_vocab) > 1: continue
                     raw_sent = sentence["sent"]
@@ -258,7 +260,8 @@ def allWordPairs():
                     if not vocab in word_dict.keys():
                         word_dict[vocab] = []
                     pos = tracking.index(raw_pos)
-                    word_dict[vocab].append([bert_sent, pos, word["sense"]])
+                    word_dict[vocab].append([sent_key, pos, word["sense"]])
+                sent_key += 1
     pairs = {}
     for word in word_dict.keys():
         instances = word_dict[word]
@@ -272,7 +275,8 @@ def allWordPairs():
                 j += 1
         pairs[word] = pairs_of_word
     with open("sense_pairs.json", "w") as pair_file:
-        json.dump(pairs, pair_file, indent = 4)
+        json.dump([sent_dict, pairs], pair_file, indent = 4)
+
 
 
 def unicodeToAscii(s):
@@ -283,6 +287,48 @@ def unicodeToAscii(s):
         if unicodedata.category(c) != 'Mn'
         and c in all_letters
     )
+
+def pairDataToBertVecs():
+    with open("sense_pairs.json", "r") as f:
+        comp_data = json.load(f)
+        sent_dict = comp_data[0]
+        word_pairs = comp_data[1]
+    
+    # set up the model
+    config = BertConfig.from_pretrained('bert-base-uncased')
+    #config.output_hidden_states=True
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    model = BertModel(config)
+
+    comb_vecs = []
+    for word in word_pairs.keys():
+        print(word)
+        word_pairs_of_word = word_pairs[word]
+        i = 0
+        for pair in word_pairs_of_word:
+            if i >= 2: break
+            instance1 = pair[0]
+            instance2 = pair[1]
+            if_same = pair[2]
+
+            sent1 = sent_dict[str(instance1[0])]
+            pos1 = instance1[1]
+            sent2 = sent_dict[str(instance2[0])]
+            pos2 = instance2[1]
+
+            vec1 = vectorizeWordInContext(sent1, pos1, tokenizer, model)
+            vec2 = vectorizeWordInContext(sent2, pos2, tokenizer, model)
+
+            comb_vec = torch.cat((vec1, vec2))
+            comb_vecs.append(comb_vec)
+            i += 1
+    x_train = torch.stack(comb_vecs)
+    with open("logistics_embedded.json", "w") as f:
+        json.dump(x_train, f, indent=4)
+    print("dump success!")
+    return x_train
+
+
 
 
 
