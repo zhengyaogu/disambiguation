@@ -3,6 +3,7 @@ from pytorch_transformers import *
 import json
 import pprint
 import copy
+import unicodedata
 """
 config = BertConfig.from_pretrained('bert-base-uncased')
 config.output_hidden_states=True
@@ -92,23 +93,22 @@ def getJsonSentences(data):
     sentence = []
     sentences = []
     for word in data:
+        word["text"] = unicodeToAscii(word["text"])
         if word["break_level"] == "SENTENCE_BREAK":
             sentences.append(sentence)
             sentence = []
+        if word["text"] != "":
         sentence.append(word)
     return sentences
 
-def loadAndFormatData(docnames):
-    """
-    This function is intended to be used only by getFormattedData
-    """
-    with open("googledata.json") as json_file:
-        return getFormattedData(docnames, json.load(json_file))
-
-def getFormattedData(docnames, data):
+def getFormattedData(docnames):
     """
     This function converts all the specified documents into our second json format.
     """
+    data = []
+    with open("googledata.json") as json_file:
+        data = json.load(json_file)
+
     formatted_data = []
     for document in data:
         if document["docname"] in docnames or "all" in docnames:
@@ -232,15 +232,16 @@ def allWordPairs():
     print(pairs)
 
 
+def unicodeToAscii(s):
+    s = ''.join([ASCII_REPLACEMENTS.get(c, c) for c in s])
+    return unicode(unicodedata.normalize('NFKD',
+                       s).encode('ascii', 'ignore'))
 
 
-
-
-"""
 if __name__ == "__main__":
-    documents_to_process = ["all"]
-    formatted_data = getFormattedData(documents_to_process)
-    with open("formattedgoogledata3.json", "w") as json_file:
-        json.dump(formatted_data, json_file, indent=4)
-"""
+    print(unicodeToAscii("fam\u00adily"))
+    #documents_to_process = ["/written/letters/AMC2.txt"]
+    #formatted_data = getFormattedData(documents_to_process)
+    #with open("formattedgoogledata4.json", "w") as json_file:
+        #json.dump(formatted_data, json_file, indent=4)
     
