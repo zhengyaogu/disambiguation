@@ -3,6 +3,7 @@ from pytorch_transformers import *
 import json
 import pprint
 import copy
+import timeit
 """
 config = BertConfig.from_pretrained('bert-base-uncased')
 config.output_hidden_states=True
@@ -147,6 +148,10 @@ def createSentenceDictionaries(document_data, list_to_modify):
 
 
 def trackRawSentenceIndices(raw_sent, bert_sent):
+    """
+    track the position each word in BERT tokenization belong to in the original tokenization
+    returns the tracking list
+    """
     tracking = []
     n = 0
     i = 0 #keep track of the current word in bert_sent
@@ -165,6 +170,10 @@ def trackRawSentenceIndices(raw_sent, bert_sent):
 
 
 def getBertSentenceFromRaw(raw_sent):
+    """
+    convert the original tokenization to the BERT tokenization
+    returns the BERT tokenization
+    """
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     bert_sent_list = []
     for raw_word in raw_sent:
@@ -173,6 +182,9 @@ def getBertSentenceFromRaw(raw_sent):
     return bert_sent_list
 
 def getSentencesBySense(sense):
+    """
+    return sentences with word with a specific sense
+    """
     filtered_sentences = []
     with open("formattedgoogledata.json", "r") as f:
         data = json.load(f)
@@ -184,6 +196,9 @@ def getSentencesBySense(sense):
         return filtered_sentences
 
 def getSentencesByWord(word):
+    """
+    return sentences with specific word
+    """
     filtered_sentences = []
     with open("formattedgoogledata.json", "r") as f:
         data = json.load(f)
@@ -194,6 +209,7 @@ def getSentencesByWord(word):
     return filtered_sentences
 
 def allWordPairs():
+    "return all the word pairs in a file, compaired in senses"
     tk = BertTokenizer.from_pretrained('bert-base-uncased')
     word_dict = {}
     with open("formattedgoogledata3.json", "r") as f:
@@ -224,7 +240,8 @@ def allWordPairs():
                 pairs_of_word.append([instances[i][:2], instances[j][:2], same_sense])
                 j += 1
         pairs[word] = pairs_of_word
-    print(pairs)
+    with open("sense_pairs.json", "w") as pair_file:
+        json.dump(pairs, pair_file, indent = 4)
 
 
 
