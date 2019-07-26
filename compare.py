@@ -4,6 +4,8 @@ import json
 import pprint
 import copy
 import timeit
+import unicodedata
+import string
 """
 config = BertConfig.from_pretrained('bert-base-uncased')
 config.output_hidden_states=True
@@ -217,9 +219,10 @@ def allWordPairs():
     "return all the word pairs in a file, compaired in senses"
     tk = BertTokenizer.from_pretrained('bert-base-uncased')
     word_dict = {}
-    with open("formattedgoogledata3.json", "r") as f:
+    with open("googledatanewtracking.json", "r") as f:
         data = json.load(f)
         for doc in data:
+            print("converting data in", doc["docname"])
             for sentence in doc["doc"]:
                 for word in sentence["senses"]:
                     vocab = word["word"]
@@ -247,6 +250,16 @@ def allWordPairs():
         pairs[word] = pairs_of_word
     with open("sense_pairs.json", "w") as pair_file:
         json.dump(pairs, pair_file, indent = 4)
+
+
+def unicodeToAscii(s):
+    all_letters = string.ascii_letters + " .,;'-"
+    n_letters = len(all_letters) + 1 # Plus EOS marker
+    return ''.join(
+        c for c in unicodedata.normalize('NFD', s)
+        if unicodedata.category(c) != 'Mn'
+        and c in all_letters
+    )
 
 
 
