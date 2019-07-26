@@ -288,8 +288,8 @@ def unicodeToAscii(s):
 
 if __name__ == "__main__":
     #print(unicodeToAscii("fam\u00adily"))
-    documents_to_process = ["/written/letters/AMC2.txt"]
-    formatted_data = getFormattedData(documents_to_process)
-    with open("formattedgoogledata4.json", "w") as json_file:
+    documents_to_process = test_files_list
+    formatted_data = getFormattedData(["all"])
+    with open("completedata.json", "w") as json_file:
         json.dump(formatted_data, json_file, indent=4)
     
