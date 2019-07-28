@@ -6,6 +6,8 @@ class Cd:
         self.newPath = os.path.join(os.getcwd(), newPath)
 
     def __enter__(self):
+        if not os.path.exists(self.newPath):
+            os.mkdir(self.newPath)
         self.savedPath = os.getcwd()
         os.chdir(self.newPath)
 
