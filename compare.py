@@ -274,7 +274,7 @@ def allWordPairs(filename):
         for i in range(len(instances)):
             if i%1000 == 0:
                 print(i)
-            if i > 5000: break
+            if i > 2000: break
             j = i + 1
             while j < len(instances):
                 same_sense = 1 if instances[i][2] == instances[j][2] else 0
