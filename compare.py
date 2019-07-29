@@ -5,8 +5,15 @@ import pprint
 import copy
 import timeit
 import unicodedata
+import resource
+import sys
+import os
 import string
+<<<<<<< HEAD
 import random
+=======
+from cd import Cd
+>>>>>>> d74894856123993b7b9691c586dbfed236cf945a
 
 
 training_files_list = ["/written/letters/112C-L014.txt", 
@@ -179,7 +186,7 @@ def createSentenceDictionaries(document_data, list_to_modify):
 
 def trackRawSentenceIndices(raw_sent, bert_sent):
     """
-    track the position each word in BERT tokenization belong to in the original tokenization
+    track the position each word in BERT tokenization belongs to in the original tokenization
     returns the tracking list
     """
     tracking = []
@@ -246,36 +253,39 @@ def allWordPairs(filename):
     sent_key = 0
     with open(filename, "r") as f:
         data = json.load(f)
-        for doc in data:
-            print("converting data in", doc["docname"])
-            for sentence in doc["doc"]:
-                sent_dict[sent_key] = sentence["bert_sent"]
-                for word in sentence["senses"]:
-                    vocab = word["word"].lower()
-                    tokenized_vocab = tk.tokenize(vocab)
-                    if len(tokenized_vocab) > 1: continue
-                    raw_sent = sentence["sent"]
-                    bert_sent = sentence["bert_sent"]
-                    raw_pos = word["pos"]
-                    tracking = sentence["tracking"]
-                    if not vocab in word_dict.keys():
-                        word_dict[vocab] = []
-                    pos = tracking.index(raw_pos)
-                    word_dict[vocab].append([sent_key, pos, word["sense"]])
-                sent_key += 1
+    for doc in data:
+        print("converting data in", doc["docname"])
+        for sentence in doc["doc"]:
+            sent_dict[sent_key] = sentence["bert_sent"]
+            for word in sentence["senses"]:
+                vocab = word["word"].lower()
+                tokenized_vocab = tk.tokenize(vocab)
+                if len(tokenized_vocab) > 1: continue
+                raw_pos = word["pos"]
+                tracking = sentence["tracking"]
+                if not vocab in word_dict.keys():
+                    word_dict[vocab] = []
+                pos = tracking.index(raw_pos)
+                word_dict[vocab].append([sent_key, pos, word["sense"]])
+            sent_key += 1
+    data = None
     pairs = {}
     for word in word_dict.keys():
+        print(word)
         instances = word_dict[word]
         pairs_of_word = []
         if len(instances) <= 1: continue
         for i in range(len(instances)):
+            if i%1000 == 0:
+                print(i)
+            if i > 2000: break
             j = i + 1
             while j < len(instances):
                 same_sense = 1 if instances[i][2] == instances[j][2] else 0
                 pairs_of_word.append([instances[i][:2], instances[j][:2], same_sense])
                 j += 1
         pairs[word] = pairs_of_word
-    with open("sense_pairs.json", "w") as pair_file:
+    with open("complete_sense_pairs.json", "w") as pair_file:
         json.dump([sent_dict, pairs], pair_file, indent = 4)
 
 
@@ -288,6 +298,7 @@ def unicodeToAscii(s):
         if unicodedata.category(c) != 'Mn'
         and c in all_letters
     )
+
 
 def pairDataToBertVecs(train_size, instance_size, train_or_test):
     """
@@ -343,15 +354,43 @@ def pairDataToBertVecs(train_size, instance_size, train_or_test):
     return x_train
 
 
+    print(num_same)
+    print(num_diff)
+    print(len(X))
+    print(len(y))
+    print("writing trainingx.json")
+    with open("trainingx.json", "w") as xfile:
+        json.dump(X, xfile)
+    print("writing trainingy.json")
+    with open("trainingy.json", "w") as yfile:
+        json.dump(y, yfile)
+    
 
 
+
+def memory_limit():
+    soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+    resource.setrlimit(resource.RLIMIT_AS, (get_memory() * 1024 *0.75, hard))
+
+def get_memory():
+    with open('/proc/meminfo', 'r') as mem:
+        free_memory = 0
+        for i in mem:
+            sline = i.split()
+            if str(sline[0]) in ('MemFree:', 'Buffers:', 'Cached:'):
+                free_memory += int(sline[1])
+    return free_memory
 
 
 
 if __name__ == "__main__":
+    memory_limit() # Limitates maximun memory usage to half
+    allWordPairs("completedata.json")
+    #pairDataToBertVecs(1000)
+    #loadBertVecTrainingData()
     #print(unicodeToAscii("fam\u00adily"))
-    documents_to_process = test_files_list
-    formatted_data = getFormattedData(["all"])
-    with open("completedata.json", "w") as json_file:
-        json.dump(formatted_data, json_file, indent=4)
+    #documents_to_process = test_files_list
+    #formatted_data = getFormattedData(["all"])
+    #with open("completedata.json", "w") as json_file:
+    #json.dump(formatted_data, json_file, indent=4)
     
