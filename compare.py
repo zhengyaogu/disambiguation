@@ -182,7 +182,7 @@ def createSentenceDictionaries(document_data, list_to_modify):
 
 def trackRawSentenceIndices(raw_sent, bert_sent):
     """
-    track the position each word in BERT tokenization belong to in the original tokenization
+    track the position each word in BERT tokenization belongs to in the original tokenization
     returns the tracking list
     """
     tracking = []
@@ -249,23 +249,22 @@ def allWordPairs(filename):
     sent_key = 0
     with open(filename, "r") as f:
         data = json.load(f)
-        for doc in data:
-            print("converting data in", doc["docname"])
-            for sentence in doc["doc"]:
-                sent_dict[sent_key] = sentence["bert_sent"]
-                for word in sentence["senses"]:
-                    vocab = word["word"].lower()
-                    tokenized_vocab = tk.tokenize(vocab)
-                    if len(tokenized_vocab) > 1: continue
-                    raw_sent = sentence["sent"]
-                    bert_sent = sentence["bert_sent"]
-                    raw_pos = word["pos"]
-                    tracking = sentence["tracking"]
-                    if not vocab in word_dict.keys():
-                        word_dict[vocab] = []
-                    pos = tracking.index(raw_pos)
-                    word_dict[vocab].append([sent_key, pos, word["sense"]])
-                sent_key += 1
+    for doc in data:
+        print("converting data in", doc["docname"])
+        for sentence in doc["doc"]:
+            sent_dict[sent_key] = sentence["bert_sent"]
+            for word in sentence["senses"]:
+                vocab = word["word"].lower()
+                tokenized_vocab = tk.tokenize(vocab)
+                if len(tokenized_vocab) > 1: continue
+                raw_pos = word["pos"]
+                tracking = sentence["tracking"]
+                if not vocab in word_dict.keys():
+                    word_dict[vocab] = []
+                pos = tracking.index(raw_pos)
+                word_dict[vocab].append([sent_key, pos, word["sense"]])
+            sent_key += 1
+    data = None
     pairs = {}
     for word in word_dict.keys():
         instances = word_dict[word]
@@ -390,9 +389,9 @@ def get_memory():
 
 if __name__ == "__main__":
     memory_limit() # Limitates maximun memory usage to half
-    #allWordPairs("completedata.json")
+    allWordPairs("completedata.json")
     #pairDataToBertVecs(1000)
-    loadBertVecTrainingData()
+    #loadBertVecTrainingData()
     #print(unicodeToAscii("fam\u00adily"))
     #documents_to_process = test_files_list
     #formatted_data = getFormattedData(["all"])
