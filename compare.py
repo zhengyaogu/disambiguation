@@ -9,11 +9,8 @@ import resource
 import sys
 import os
 import string
-<<<<<<< HEAD
 import random
-=======
 from cd import Cd
->>>>>>> d74894856123993b7b9691c586dbfed236cf945a
 
 
 training_files_list = ["/written/letters/112C-L014.txt", 
