@@ -267,10 +267,14 @@ def allWordPairs(filename):
     data = None
     pairs = {}
     for word in word_dict.keys():
+        print(word)
         instances = word_dict[word]
         pairs_of_word = []
         if len(instances) <= 1: continue
         for i in range(len(instances)):
+            if i%1000:
+                print(i)
+            if i > 50000: break
             j = i + 1
             while j < len(instances):
                 same_sense = 1 if instances[i][2] == instances[j][2] else 0
