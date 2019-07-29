@@ -6,6 +6,7 @@ import copy
 import timeit
 import unicodedata
 import string
+import random
 
 
 training_files_list = ["/written/letters/112C-L014.txt", 
@@ -288,7 +289,10 @@ def unicodeToAscii(s):
         and c in all_letters
     )
 
-def pairDataToBertVecs():
+def pairDataToBertVecs(train_size, instance_size, train_or_test):
+    """
+    return 2D torch tensor of 
+    """
     with open("sense_pairs.json", "r") as f:
         comp_data = json.load(f)
         sent_dict = comp_data[0]
@@ -301,12 +305,16 @@ def pairDataToBertVecs():
     model = BertModel(config)
 
     comb_vecs = []
-    for word in word_pairs.keys():
+    y_train = []
+    k = 0
+    random_keys_list = random.sample(word_pairs.keys(), 1000)
+    for word in random_keys_list:
+        if k >= train_size: break
         print(word)
         word_pairs_of_word = word_pairs[word]
         i = 0
         for pair in word_pairs_of_word:
-            if i >= 2: break
+            if i >= 10: break
             instance1 = pair[0]
             instance2 = pair[1]
             if_same = pair[2]
@@ -321,12 +329,20 @@ def pairDataToBertVecs():
 
             comb_vec = torch.cat((vec1, vec2))
             comb_vecs.append(comb_vec)
+
+            y_train.append(if_same)
             i += 1
+        k += 1
     x_train = torch.stack(comb_vecs)
-    with open("logistics_embedded.json", "w") as f:
-        json.dump(x_train, f, indent=4)
-    print("dump success!")
+    if train_or_test == "train":
+        torch.save([x_train, y_train], "logistics_train.json")
+        print("dump train success!")
+    elif train_or_test == "test":
+        torch.save([x_train, y_train], "logistics_test.json")
+        print("dump test success!")
     return x_train
+
+
 
 
 
