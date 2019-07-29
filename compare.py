@@ -378,6 +378,23 @@ def get_memory():
                 free_memory += int(sline[1])
     return free_memory
 
+def generateWordLemmaDict():
+    with open("googledata.json", "r") as f:
+        data = json.load(f)
+    d = {}
+    for doc in data:
+        print("processing", doc["docname"], "...")
+        for word in doc["doc"]:
+            if "lemma" in word.keys() and "sense" in word.keys():
+                d[word["text"]] = word["lemma"]
+    with open("word_lemma_dict.json", "w") as f:
+        json.dump(d, f, indent=4)
+
+def getLemmaFromWord(word):
+    with open("word_lemma_dict.json", "r") as f:
+        d = json.load(f)
+    return d[word]
+
 
 
 if __name__ == "__main__":
