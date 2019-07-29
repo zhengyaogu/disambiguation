@@ -272,7 +272,7 @@ def allWordPairs(filename):
         pairs_of_word = []
         if len(instances) <= 1: continue
         for i in range(len(instances)):
-            if i%1000:
+            if i%1000 == 0:
                 print(i)
             if i > 50000: break
             j = i + 1
