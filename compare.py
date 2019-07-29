@@ -1,4 +1,5 @@
 import torch
+import pandas as pd
 from pytorch_transformers import *
 import json
 import pprint
@@ -129,6 +130,65 @@ def getJsonSentences(data):
         if word["text"] != "":
             sentence.append(word)
     return sentences
+
+def getLemmaFromWord():
+    pass
+
+
+def exploreData(file_):
+    with open(file_) as f:
+        file_data = json.load(f)
+
+    id_sent_dict = {}
+    with Cd("lemmadata"):
+        for document in file_data:
+            doc_body = document["doc"]
+            for sent_id, sent_object in enumerate(doc_body):
+
+                words_with_sense = sent_object["senses"]
+                id_sent_dict[sent_id] = sent_object["bert_sent"]
+
+                for word_object in words_with_sense:
+                    lemma = getLemmaFromWord(word_object["word"])
+                    lemma_instance = {}
+                    lemma_instance["sent_id"] = sent_id
+                    lemma_instance["pos"] = word_object["pos"]
+                    lemma_instance["sense"] = word_object["sense"]
+                    lemma_file_name = lemma+".json"
+                    if os.path.exists(lemma_file_name):
+                        with open(lemma_file_name, "r") as lemma_file:
+                            lemma_instance_list = json.load(lemma_file)
+                        lemma_instance_list.append(lemma_instance)
+                        with open(lemma_file_name, "w") as lemma_file:
+                            json.dump(lemma_instance_list)
+                    else:
+                        lemma_instance_list = [lemma_instance]
+                        with open(lemma_file_name, "w") as lemma_file:
+                            json.dump(lemma_instance_list, lemma_file)
+            with open("id_to_sent.json", "w") as id_to_sent_file:
+                json.dump(id_sent_dict, id_to_sent_file)
+
+
+
+                
+
+def createListOfUniqueWords(file_):
+    with open(file_, "r") as f:
+        file_data = json.load(f)
+    unique_lemmas = []
+    for document in file_data:
+        doc_body = document["doc"]
+        for word in doc_body:
+            if "lemma" in word:
+                if not word["lemma"] in unique_lemmas:
+                    unique_lemmas.append(word["lemma"])
+    print(len(unique_lemmas))
+    with open("unique_lemmas.json", "w") as unique:
+        json.dump(unique_lemmas, unique)
+
+
+
+
 
 def getFormattedData(docnames):
     """
@@ -284,8 +344,6 @@ def allWordPairs(filename):
     with open("complete_sense_pairs.json", "w") as pair_file:
         json.dump([sent_dict, pairs], pair_file, indent = 4)
 
-
-
 def unicodeToAscii(s):
     all_letters = string.ascii_letters + " .,;'-"
     n_letters = len(all_letters) + 1 # Plus EOS marker
@@ -304,7 +362,7 @@ def pairDataToBertVecsFiles(limit_combos=100000):
     with open("sense_pairs.json", "r") as f:
         comp_data = json.load(f)
         sent_dict = comp_data[0]
-        word_pairs = comp_data[1]
+        word_pairs = comp_data[1].json
     
     # set up the model
     config = BertConfig.from_pretrained('bert-base-uncased')
@@ -380,7 +438,7 @@ def loadBertVecTrainingData():
 
 def memory_limit():
     soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-    resource.setrlimit(resource.RLIMIT_AS, (get_memory() * 1024 *0.75, hard))
+    resource.setrlimit(resource.RLIMIT_AS, (get_memory() * 1024 *0.9, hard))
 
 def get_memory():
     with open('/proc/meminfo', 'r') as mem:
@@ -393,12 +451,13 @@ def get_memory():
 
 if __name__ == "__main__":
     memory_limit() # Limitates maximun memory usage to half
-    allWordPairs("completedata.json")
-    #pairDataToBertVecs(1000)
+    #allWordPairs("completedata.json")
+    #pairDataToBertVecsFiles(2000)
     #loadBertVecTrainingData()
     #print(unicodeToAscii("fam\u00adily"))
     #documents_to_process = test_files_list
     #formatted_data = getFormattedData(["all"])
     #with open("completedata.json", "w") as json_file:
     #json.dump(formatted_data, json_file, indent=4)
+    createListOfUniqueWords("googledata.json")
     
