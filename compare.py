@@ -10,6 +10,7 @@ import resource
 import sys
 import os
 import string
+import random
 from cd import Cd
 
 
@@ -353,12 +354,11 @@ def unicodeToAscii(s):
         and c in all_letters
     )
 
-"""
-Creates a wordData directory, which has subdirectories for each word unique word
-contained in sense_pairs.json. Each of these directories contains one file for each
-training example. 
-"""
-def pairDataToBertVecsFiles(limit_combos=100000):
+
+def pairDataToBertVecs(train_size, instance_size, train_or_test):
+    """
+    return 2D torch tensor of 
+    """
     with open("sense_pairs.json", "r") as f:
         comp_data = json.load(f)
         sent_dict = comp_data[0]
@@ -369,60 +369,46 @@ def pairDataToBertVecsFiles(limit_combos=100000):
     #config.output_hidden_states=True
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     model = BertModel(config)
-    with Cd("wordData"):
-        for word in word_pairs.keys():
-            with Cd(word):
-                print(os.getcwd())
-                word_combinations = word_pairs[word]
-                print(word, "has", len(word_combinations), "combinations")
-                print("however only", limit_combos, "will be processed")
-                for i, comb in enumerate(word_combinations):
-                    if i >= limit_combos:
-                        break
-                    instance1 = comb[0]
-                    instance2 = comb[1]
-                    is_same_sense = comb[2]
 
-                    sent1 = sent_dict[str(instance1[0])]
-                    pos1 = instance1[1]
-                    sent2 = sent_dict[str(instance2[0])]
-                    pos2 = instance2[1]
+    comb_vecs = []
+    y_train = []
+    k = 0
+    random_keys_list = random.sample(word_pairs.keys(), 1000)
+    for word in random_keys_list:
+        if k >= train_size: break
+        print(word)
+        word_pairs_of_word = word_pairs[word]
+        i = 0
+        for pair in word_pairs_of_word:
+            if i >= 10: break
+            instance1 = pair[0]
+            instance2 = pair[1]
+            if_same = pair[2]
 
-                    vec1 = vectorizeWordInContext(sent1, pos1, tokenizer, model)
-                    vec2 = vectorizeWordInContext(sent2, pos2, tokenizer, model)
+            sent1 = sent_dict[str(instance1[0])]
+            pos1 = instance1[1]
+            sent2 = sent_dict[str(instance2[0])]
+            pos2 = instance2[1]
 
-                    comb_vec = torch.cat((vec1, vec2))
-                    data_point = [comb_vec.tolist(), is_same_sense]
+            vec1 = vectorizeWordInContext(sent1, pos1, tokenizer, model)
+            vec2 = vectorizeWordInContext(sent2, pos2, tokenizer, model)
 
-                    with open(word+str(i)+".json", "w") as f:
-                        json.dump(data_point, f, indent=4)
+            comb_vec = torch.cat((vec1, vec2))
+            comb_vecs.append(comb_vec)
+
+            y_train.append(if_same)
+            i += 1
+        k += 1
+    x_train = torch.stack(comb_vecs)
+    if train_or_test == "train":
+        torch.save([x_train, y_train], "logistics_train.json")
+        print("dump train success!")
+    elif train_or_test == "test":
+        torch.save([x_train, y_train], "logistics_test.json")
+        print("dump test success!")
+    return x_train
 
 
-def loadBertVecTrainingData():
-    num_same = 0
-    num_diff = 0
-    X = []
-    y = []
-    with Cd("wordData"):
-        for f in os.listdir():
-            if os.path.isdir(f):
-                print(f)
-                with Cd(f):
-                    for file_num, fil in enumerate(os.listdir()):
-                        if file_num > 500:
-                            continue
-                        if os.path.isfile(fil):
-                            data_point = None
-                            with open(fil, "r") as d:
-                                data_point = json.load(d)
-                            if data_point[1] == 1 and num_same-num_diff < 25:
-                                X.append(data_point[0])
-                                y.append(data_point[1])
-                                num_same += 1
-                            elif data_point[1] == 0 and num_diff-num_same < 25:
-                                X.append(data_point[0])
-                                y.append(data_point[1])
-                                num_diff += 1
     print(num_same)
     print(num_diff)
     print(len(X))
@@ -434,6 +420,7 @@ def loadBertVecTrainingData():
     with open("trainingy.json", "w") as yfile:
         json.dump(y, yfile)
     
+
 
 
 def memory_limit():
@@ -448,6 +435,25 @@ def get_memory():
             if str(sline[0]) in ('MemFree:', 'Buffers:', 'Cached:'):
                 free_memory += int(sline[1])
     return free_memory
+
+def generateWordLemmaDict():
+    with open("googledata.json", "r") as f:
+        data = json.load(f)
+    d = {}
+    for doc in data:
+        print("processing", doc["docname"], "...")
+        for word in doc["doc"]:
+            if "lemma" in word.keys() and "sense" in word.keys():
+                d[word["text"]] = word["lemma"]
+    with open("word_lemma_dict.json", "w") as f:
+        json.dump(d, f, indent=4)
+
+def getLemmaFromWord(word):
+    with open("word_lemma_dict.json", "r") as f:
+        d = json.load(f)
+    return d[word]
+
+
 
 if __name__ == "__main__":
     memory_limit() # Limitates maximun memory usage to half
