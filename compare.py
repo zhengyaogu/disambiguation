@@ -146,15 +146,14 @@ def createLemmaData(file_):
         word_lemma_dict = json.load(f)
     id_sent_dict = {}
     with Cd("lemmadata"):
+        sent_id = 0
         for document in file_data:
             doc_body = document["doc"]
-            for sent_id, sent_object in enumerate(doc_body):
-                print(sent_id)
-
+            for sent_object in doc_body:
                 words_with_sense = sent_object["senses"]
                 id_sent_dict[sent_id] = sent_object["bert_sent"]
                 tracking = sent_object["tracking"]
-
+                print(sent_id)
                 for word_object in words_with_sense:
                     if not word_object["word"] in word_lemma_dict:
                         continue
@@ -174,6 +173,7 @@ def createLemmaData(file_):
                         lemma_instance_list = [lemma_instance]
                         with open(lemma_file_name, "w") as lemma_file:
                             json.dump(lemma_instance_list, lemma_file)
+                sent_id += 1
         with open("id_to_sent.json", "w") as id_to_sent_file:
             json.dump(id_sent_dict, id_to_sent_file)
 
@@ -192,12 +192,13 @@ def createCsvData():
                     with open(dir_item, "r") as f:
                         lemma_data = json.load(f)
                     with Cd("vectors"):
-                        with open(dir_item[:-5]+".csv", "a+") as vector_file:
+                        with open(dir_item[:-5]+".csv", "w") as vector_file:
                             writer = csv.writer(vector_file, delimiter=",")
                             for instance in lemma_data:
                                 inst_sent_id = instance["sent_id"]
                                 inst_sense = instance["sense"]
                                 inst_sent = sent_id_dict[str(inst_sent_id)]
+                                print(instance)
                                 vector = vectorizeWordInContext(inst_sent, instance["pos"], tokenizer, model)
                                 vec_list = vector.detach().tolist()
                                 row_data = [inst_sent_id, instance["pos"], inst_sense] + vec_list
@@ -213,11 +214,7 @@ def ReadCsvFileTest():
                 if line_count == 9:
                     print(row)
                 if line_count > 10:
-                    break
-
-
-
-                
+                    break               
 
 def createListOfUniqueWords(file_):
     with open(file_, "r") as f:
@@ -506,7 +503,7 @@ if __name__ == "__main__":
     #with open("completedata.json", "w") as json_file:
     #json.dump(formatted_data, json_file, indent=4)
     #createListOfUniqueWords("googledata.json")
-    """ createLemmaData("testdata.json")
-    createCsvData() """
-    ReadCsvFileTest()
+    createLemmaData("completedata.json")
+    createCsvData()
+    #ReadCsvFileTest()
     
