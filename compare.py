@@ -494,9 +494,39 @@ def generateWordLemmaDict():
     with open("word_lemma_dict.json", "w") as f:
         json.dump(d, f, indent=4)
 
+def sampleTrainingData(size):
+    t = []
+    with Cd("lemmadata/vectors"):
+        for file in os.listdir():
+            if not file.endswith(".csv"): continue
+            data = pd.read_csv(f, delimiter=",")
+            size = len(data.index)
+
+            max_n_pairs = size * (size - 1) // 2
+
+            if size > max_n_pairs: size = max_n_pairs
+
+            i_seq = random.shuffle(range(size))
+            j_seq = random.shuffle(range(size))
+
+            i = 0
+            while i < size:
+                instance1 = data.iloc[i_seq.pop()]
+                instance2 = data.iloc[j_seq.pop()]
+                if_same = 1 if instance1.iloc(2) == instance2.iloc(2) else 0
+                if if_same == 1: i += 1
+                else: j += 1
+                pair = pd.concat([pd.Series([if_same]), instance1.iloc[3:], instance2.iloc[3:]])
+                t.append(torch.from_numpy(pair.values))
+                i += 1
+    return torch.stack(t)
+
+
+
+
 
 if __name__ == "__main__":
-    memory_limit() # Limitates maximun memory usage to half
+    #memory_limit() # Limitates maximun memory usage to half
     #allWordPairs("completedata.json")
     #pairDataToBertVecsFiles(2000)
     #loadBertVecTrainingData()
@@ -506,7 +536,7 @@ if __name__ == "__main__":
     #with open("completedata.json", "w") as json_file:
     #json.dump(formatted_data, json_file, indent=4)
     #createListOfUniqueWords("googledata.json")
-    """ createLemmaData("testdata.json")
-    createCsvData() """
+    createLemmaData("testdata.json")
+    createCsvData()
     ReadCsvFileTest()
     
