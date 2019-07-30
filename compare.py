@@ -10,7 +10,9 @@ import resource
 import sys
 import os
 import string
+import csv
 import random
+import numpy
 from cd import Cd
 
 
@@ -136,24 +138,30 @@ def getLemmaFromWord():
     pass
 
 
-def exploreData(file_):
+def createLemmaData(file_):
     with open(file_) as f:
         file_data = json.load(f)
 
+    with open("word_lemma_dict.json", "r") as f:
+        word_lemma_dict = json.load(f)
     id_sent_dict = {}
     with Cd("lemmadata"):
         for document in file_data:
             doc_body = document["doc"]
             for sent_id, sent_object in enumerate(doc_body):
+                print(sent_id)
 
                 words_with_sense = sent_object["senses"]
                 id_sent_dict[sent_id] = sent_object["bert_sent"]
+                tracking = sent_object["tracking"]
 
                 for word_object in words_with_sense:
-                    lemma = getLemmaFromWord(word_object["word"])
+                    if not word_object["word"] in word_lemma_dict:
+                        continue
+                    lemma = word_lemma_dict[word_object["word"]]
                     lemma_instance = {}
                     lemma_instance["sent_id"] = sent_id
-                    lemma_instance["pos"] = word_object["pos"]
+                    lemma_instance["pos"] = tracking.index(word_object["pos"])
                     lemma_instance["sense"] = word_object["sense"]
                     lemma_file_name = lemma+".json"
                     if os.path.exists(lemma_file_name):
@@ -161,13 +169,51 @@ def exploreData(file_):
                             lemma_instance_list = json.load(lemma_file)
                         lemma_instance_list.append(lemma_instance)
                         with open(lemma_file_name, "w") as lemma_file:
-                            json.dump(lemma_instance_list)
+                            json.dump(lemma_instance_list, lemma_file)
                     else:
                         lemma_instance_list = [lemma_instance]
                         with open(lemma_file_name, "w") as lemma_file:
                             json.dump(lemma_instance_list, lemma_file)
-            with open("id_to_sent.json", "w") as id_to_sent_file:
-                json.dump(id_sent_dict, id_to_sent_file)
+        with open("id_to_sent.json", "w") as id_to_sent_file:
+            json.dump(id_sent_dict, id_to_sent_file)
+
+
+def createCsvData():
+    config = BertConfig.from_pretrained('bert-base-uncased')
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    model = BertModel(config)
+    with Cd("lemmadata"):
+        with open("id_to_sent.json") as sent_id_dict_file:
+            sent_id_dict = json.load(sent_id_dict_file)
+        for dir_item in os.listdir():
+            if os.path.isfile(dir_item):
+                if dir_item.endswith(".json") and dir_item != "id_to_sent.json":
+                    print(dir_item)
+                    with open(dir_item, "r") as f:
+                        lemma_data = json.load(f)
+                    with Cd("vectors"):
+                        with open(dir_item[:-5]+".csv", "a+") as vector_file:
+                            writer = csv.writer(vector_file, delimiter=",")
+                            for instance in lemma_data:
+                                inst_sent_id = instance["sent_id"]
+                                inst_sense = instance["sense"]
+                                inst_sent = sent_id_dict[str(inst_sent_id)]
+                                vector = vectorizeWordInContext(inst_sent, instance["pos"], tokenizer, model)
+                                vec_list = vector.detach().tolist()
+                                row_data = [inst_sent_id, instance["pos"], inst_sense] + vec_list
+                                writer.writerow(row_data)
+
+def ReadCsvFileTest():
+    with Cd("lemmadata/vectors"):
+        with open("be.csv", "r") as f:
+            csv_reader = csv.reader(f, delimiter=",")
+            line_count = 0
+            for row in csv_reader:
+                line_count += 1
+                if line_count == 9:
+                    print(row)
+                if line_count > 10:
+                    break
 
 
 
@@ -448,12 +494,6 @@ def generateWordLemmaDict():
     with open("word_lemma_dict.json", "w") as f:
         json.dump(d, f, indent=4)
 
-def getLemmaFromWord(word):
-    with open("word_lemma_dict.json", "r") as f:
-        d = json.load(f)
-    return d[word]
-
-
 
 if __name__ == "__main__":
     memory_limit() # Limitates maximun memory usage to half
@@ -465,5 +505,8 @@ if __name__ == "__main__":
     #formatted_data = getFormattedData(["all"])
     #with open("completedata.json", "w") as json_file:
     #json.dump(formatted_data, json_file, indent=4)
-    createListOfUniqueWords("googledata.json")
+    #createListOfUniqueWords("googledata.json")
+    """ createLemmaData("testdata.json")
+    createCsvData() """
+    ReadCsvFileTest()
     
