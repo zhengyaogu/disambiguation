@@ -5,6 +5,7 @@ import json
 import pprint
 import copy
 import timeit
+import time
 import unicodedata
 import resource
 import sys
@@ -15,6 +16,8 @@ import random
 import numpy
 from cd import Cd
 from itertools import product
+
+total_size = 0
 
 
 training_files_list = ["/written/letters/112C-L014.txt", 
@@ -256,25 +259,29 @@ def generateWordLemmaDict():
     with open("word_lemma_dict.json", "w") as f:
         json.dump(d, f, indent=4)
 
-def sampleAllTrainingData(size):
+def sampleAllTrainingData(max_n_pairs=1000, limit_num_files=10):
     t = []
     with Cd("lemmadata/vectors"):
         files = os.listdir()
+    i = 0
     for file in files:
-        if i >= 10: break
+        if i > limit_num_files:
+            return torch.cat(t)
         print("processing", file)
-        curr = sampleTrainingDataFromFile(size, file).float()
+        curr = sampleTrainingDataFromFile(max_n_pairs, file).float()
         if curr.shape != torch.Size([0]):
             t.append(curr)
-    result = torch.cat(t)
-    return result
+        i += 1
+    return torch.cat(t)
+
 
 def sampleTrainingDataFromFile(size, file):
+    global total_size
+    print(total_size)
     t = []
     with Cd("lemmadata/vectors"):
         data = pd.read_csv(file, delimiter=",")
         n_vectors = len(data.index)
-        print(n_vectors)
 
         max_n_pairs = n_vectors * (n_vectors - 1) // 2
 
@@ -285,6 +292,7 @@ def sampleTrainingDataFromFile(size, file):
         random.shuffle(pairs)
 
         if size > max_n_pairs: size = max_n_pairs
+        total_size += size
 
         k = 0
         while k < size:
@@ -308,5 +316,4 @@ def sampleTrainingDataFromFile(size, file):
 
 
 if __name__ == "__main__":
-    pass
-    
+    sampleAllTrainingData(1000)
