@@ -12,6 +12,9 @@ Data with Document Labels and Updated Tracking:
 https://drive.google.com/file/d/1vRSULmAL_FTngm7UVRoPzXDj5Tyh-VOp/view?usp=sharing
 
 ----------------------------------------------------------------------------------
-*Most Updated*
 Data with Document Labels and Updated Tracking:
 https://drive.google.com/file/d/1ekfegaI2Cn4TmDck--X6vIbvEkDp2yMJ/view?usp=sharing
+
+----------------------------------------------------------------------------------
+Precomputed bert vecs and lemmadata
+https://drive.google.com/drive/folders/1_x139h5nn1womNxmCaZVSddsyD5eW70R?usp=sharing
