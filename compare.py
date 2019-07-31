@@ -256,36 +256,52 @@ def generateWordLemmaDict():
     with open("word_lemma_dict.json", "w") as f:
         json.dump(d, f, indent=4)
 
-def sampleTrainingData(size):
+def sampleAllTrainingData(size):
     t = []
     with Cd("lemmadata/vectors"):
-        for file in os.listdir():
-            if not file.endswith(".csv"): continue
-            data = pd.read_csv(f, delimiter=",")
-            size = len(data.index)
+        files = os.listdir()
+    for file in files:
+        if i >= 10: break
+        print("processing", file)
+        curr = sampleTrainingDataFromFile(size, file).float()
+        if curr.shape != torch.Size([0]):
+            t.append(curr)
+    result = torch.cat(t)
+    return result
 
-            max_n_pairs = size * (size - 1) // 2
+def sampleTrainingDataFromFile(size, file):
+    t = []
+    with Cd("lemmadata/vectors"):
+        data = pd.read_csv(file, delimiter=",")
+        n_vectors = len(data.index)
+        print(n_vectors)
 
-            p = product(list(range(size)), list(range(size)))
-            pairs = []
-            for pair in p:
-                pairs.append(pair)
-            random.shuffle(pairs)
+        max_n_pairs = n_vectors * (n_vectors - 1) // 2
 
-            if size > max_n_pairs: size = max_n_pairs
+        p = product(list(range(n_vectors)), list(range(n_vectors)))
+        pairs = []
+        for pair in p:
+            pairs.append(pair)
+        random.shuffle(pairs)
 
-            k = 0
-            while k < size:
-                i, j = pairs.pop()
-                instance1 = data.iloc[i]
-                instance2 = data.iloc[j]
-                if_same = 1 if instance1.iloc[2] == instance2.iloc[2] else 0
-                if if_same == 1: i += 1
-                else: j += 1
-                pair = pd.concat([pd.Series([if_same]), instance1.iloc[3:], instance2.iloc[3:]])
-                t.append(torch.from_numpy(pair.values))
-                k += 1
-    return torch.stack(t)
+        if size > max_n_pairs: size = max_n_pairs
+
+        k = 0
+        while k < size:
+            i, j = pairs.pop()
+            instance1 = data.iloc[i]
+            instance2 = data.iloc[j]
+            if_same = 1 if instance1.iloc[2] == instance2.iloc[2] else 0
+            if if_same == 1: i += 1
+            else: j += 1
+            pair = pd.concat([pd.Series([if_same]), instance1.iloc[3:], instance2.iloc[3:]])
+            t.append(torch.from_numpy(numpy.float64(pair.values)))
+            k += 1
+    if len(t) == 0:
+        result = torch.tensor([])
+    else:
+        result = torch.stack(t)
+    return result
 
 
 
