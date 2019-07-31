@@ -14,6 +14,7 @@ import csv
 import random
 import numpy
 from cd import Cd
+from itertools import product
 
 
 training_files_list = ["/written/letters/112C-L014.txt", 
@@ -501,21 +502,25 @@ def sampleTrainingData(size):
 
             max_n_pairs = size * (size - 1) // 2
 
+            p = product(list(range(size)), list(range(size)))
+            pairs = []
+            for pair in p:
+                pairs.append(pair)
+            random.shuffle(pairs)
+
             if size > max_n_pairs: size = max_n_pairs
 
-            i_seq = random.shuffle(range(size))
-            j_seq = random.shuffle(range(size))
-
-            i = 0
-            while i < size:
-                instance1 = data.iloc[i_seq.pop()]
-                instance2 = data.iloc[j_seq.pop()]
-                if_same = 1 if instance1.iloc(2) == instance2.iloc(2) else 0
+            k = 0
+            while k < size:
+                i, j = pairs.pop()
+                instance1 = data.iloc[i]
+                instance2 = data.iloc[j]
+                if_same = 1 if instance1.iloc[2] == instance2.iloc[2] else 0
                 if if_same == 1: i += 1
                 else: j += 1
                 pair = pd.concat([pd.Series([if_same]), instance1.iloc[3:], instance2.iloc[3:]])
                 t.append(torch.from_numpy(pair.values))
-                i += 1
+                k += 1
     return torch.stack(t)
 
 
@@ -533,13 +538,8 @@ if __name__ == "__main__":
     #with open("completedata.json", "w") as json_file:
     #json.dump(formatted_data, json_file, indent=4)
     #createListOfUniqueWords("googledata.json")
-<<<<<<< HEAD
-    createLemmaData("testdata.json")
-    createCsvData()
-    ReadCsvFileTest()
-=======
-    createLemmaData("completedata.json")
+    createLemmaData("trainingdata.json")
     createCsvData()
     #ReadCsvFileTest()
->>>>>>> d4a925556bc77d6d20a574f129c431d13c8fbe7c
+
     
