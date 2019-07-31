@@ -261,7 +261,6 @@ def sampleAllTrainingData(size):
     with Cd("lemmadata/vectors"):
         files = os.listdir()
     for file in files:
-        if i >= 10: break
         print("processing", file)
         curr = sampleTrainingDataFromFile(size, file).float()
         if curr.shape != torch.Size([0]):
@@ -274,7 +273,6 @@ def sampleTrainingDataFromFile(size, file):
     with Cd("lemmadata/vectors"):
         data = pd.read_csv(file, delimiter=",")
         n_vectors = len(data.index)
-        print(n_vectors)
 
         max_n_pairs = n_vectors * (n_vectors - 1) // 2
 
@@ -285,6 +283,7 @@ def sampleTrainingDataFromFile(size, file):
         random.shuffle(pairs)
 
         if size > max_n_pairs: size = max_n_pairs
+        print(size)
 
         k = 0
         while k < size:
