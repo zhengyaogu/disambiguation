@@ -264,6 +264,7 @@ def sampleData(max_n_pairs=1000, limit_num_files_train=10, limit_num_files_test=
     t_test = []
     with Cd("lemmadata/vectors"):
         files = os.listdir()
+        print(files)
     rand_perm = list(range(len(files)))
     random.shuffle(rand_perm)
     indices_train = rand_perm[:limit_num_files_train]
