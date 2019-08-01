@@ -4,7 +4,7 @@ import numpy as np
 from compare import sampleData, sampleTrainingDataFromFile
 from experiment import tensor_batcher
 from train import train_net
-from networks import SimpleClassifier
+from networks import SimpleClassifier, DropoutClassifier7
 
 if torch.cuda.is_available():
     print("using gpu")
@@ -26,7 +26,7 @@ trainingData = cudaify(trainingData)
 testData = cudaify(testData)
 
 
-classifier = cudaify(DropoutClassifier7(1536, 700,2))
+classifier = cudaify(DropoutClassifier7(1536, 700, 2))
 
 train_net(classifier, trainingData, testData, tensor_batcher,
               batch_size=96, n_epochs=1000, learning_rate=0.001,
