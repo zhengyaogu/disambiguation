@@ -88,7 +88,6 @@ def createLemmaData(file_):
     with open("word_lemma_dict.json", "r") as f:
         word_lemma_dict = json.load(f)
     id_sent_dict = {}
-    id_pos_part_dict = {}
     with Cd("lemmadata"):
         sent_id = 0
         for document in file_data:
@@ -107,10 +106,9 @@ def createLemmaData(file_):
                     tracking_pos = tracking.index(word_object["pos"])
                     lemma_instance["pos"] = tracking_pos
                     lemma_instance["sense"] = word_object["sense"]
+                    lemma_instance["pofs"] = word_object["pos"]
                     lemma_file_name = lemma+".json"
 
-                    id_pos_tuple = (sent_id, tracking_pos)
-                    id_pos_part_dict[id_pos_tuple] = word_object["pos"]
                     if os.path.exists(lemma_file_name):
                         with open(lemma_file_name, "r") as lemma_file:
                             lemma_instance_list = json.load(lemma_file)
@@ -174,7 +172,7 @@ def getFormattedData(docnames):
             createSentenceDictionaries(document["doc"], doc_dict["doc"])
             formatted_data.append(doc_dict)
             print("finished processing the document: " + document["docname"])
-    with open("completedata.json", "w") as json_file:
+    with open("completedataV2.json", "w") as json_file:
         json.dump(formatted_data, json_file, indent=4)
     
 
@@ -191,9 +189,9 @@ def createSentenceDictionaries(document_data, list_to_modify):
         cur_pos = 0
         for word in sent:
             raw_sent.append(word["text"])
-            natural_sent += BreakToString(word["break_level"]) + word["text"]
+            natural_sent += breakToString(word["break_level"]) + word["text"]
             if "sense" in word:
-                senses.append({"word": word["text"], "pos": cur_pos, "sense": word["sense"]})
+                senses.append({"word": word["text"], "pos": cur_pos, "sense": word["sense"], "pofs": word["pos"]})
             cur_pos += 1
         bert_sent = getBertSentenceFromRaw(raw_sent)
         tracking = trackRawSentenceIndices(raw_sent, bert_sent)
@@ -278,7 +276,7 @@ def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
                         #print(sense_occurances)
                         files_to_read.append((dir_name, [sense_occurances[0][0],sense_occurances[1][0]]))
     for f in files_to_read:
-
+        pass
 
 
 def generateWordLemmaDict():
@@ -399,9 +397,5 @@ def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
         return torch.stack(pairs)
 
 
-
-
-
-
 if __name__ == "__main__":
-    sampleDataTwoSenses(100, 2, .8)
+    getFormattedData("all")
