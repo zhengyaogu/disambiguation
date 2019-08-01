@@ -21,12 +21,13 @@ else:
     def cudaify(model):
         return model
 
-trainingData, testData = sampleData(1000, 2100, 400)
+trainingData, testData = sampleData(50, 2100, 400)
 trainingData = cudaify(trainingData)
 testData = cudaify(testData)
+
 
 classifier = cudaify(DropoutClassifier7(1536, 700,2))
 
 train_net(classifier, trainingData, testData, tensor_batcher,
-              batch_size=96, n_epochs=100, learning_rate=0.001,
+              batch_size=96, n_epochs=1000, learning_rate=0.001,
               verbose=True)
