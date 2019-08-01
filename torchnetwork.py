@@ -1,7 +1,7 @@
 from __future__ import print_function, division
 import torch
 import numpy as np 
-from compare import sampleAllTrainingData, sampleTrainingDataFromFile
+from compare import sampleData, sampleTrainingDataFromFile
 from experiment import tensor_batcher
 from train import train_net
 from networks import SimpleClassifier
@@ -21,12 +21,12 @@ else:
     def cudaify(model):
         return model
 
-trainingData, testData = sampleAllTrainingData(100, 1000, 200)
+trainingData, testData = sampleData(50, 2100, 400)
 trainingData = cudaify(trainingData)
 testData = cudaify(testData)
 
-classifier = cudaify(SimpleClassifier(1536, 700,2))
+classifier = cudaify(SimpleClassifier(1536, 1000, 400, 100, 20, 2))
 
 train_net(classifier, trainingData, testData, tensor_batcher,
-              batch_size=96, n_epochs=100, learning_rate=0.001,
+              batch_size=96, n_epochs=1000, learning_rate=0.001,
               verbose=True)

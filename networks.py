@@ -12,15 +12,28 @@ class SimpleClassifier(nn.Module):
     vector over the possible labels.
     
     """    
-    def __init__(self, input_size, hidden_size, num_labels):
+    def __init__(self, input_size, hidden_size, hidden_size2, hidden_size3, hidden_size4, num_labels):
         super(SimpleClassifier, self).__init__()
+        self.dropout1 = nn.Dropout(p=0.2)
         self.linear1 = nn.Linear(input_size, hidden_size)
-        self.linear2 = nn.Linear(hidden_size, num_labels)
+        self.linear2 = nn.Linear(hidden_size, hidden_size2)
+        self.linear3 = nn.Linear(hidden_size2, hidden_size3)
+        self.linear4 = nn.Linear(hidden_size3, hidden_size4)
+        self.linear5 = nn.Linear(hidden_size4, num_labels)
+        
 
     def forward(self, input_vec):
-        nextout = self.linear1(input_vec)
+        nextout = input_vec
+        nextout = self.dropout1(nextout)
+        nextout = self.linear1(nextout)
         nextout = nextout.clamp(min=0)        
         nextout = self.linear2(nextout)
+        nextout = nextout.clamp(min=0)
+        nextout = self.linear3(nextout)
+        nextout = nextout.clamp(min=0)
+        nextout = self.linear4(nextout)
+        nextout = nextout.clamp(min=0)
+        nextout = self.linear5(nextout)
         return F.log_softmax(nextout, dim=1)
 
 class DropoutClassifier(nn.Module): 
