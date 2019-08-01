@@ -87,6 +87,7 @@ def createLemmaData(file_):
     with open("word_lemma_dict.json", "r") as f:
         word_lemma_dict = json.load(f)
     id_sent_dict = {}
+    id_pos_part_dict = {}
     with Cd("lemmadata"):
         sent_id = 0
         for document in file_data:
@@ -102,9 +103,13 @@ def createLemmaData(file_):
                     lemma = word_lemma_dict[word_object["word"]]
                     lemma_instance = {}
                     lemma_instance["sent_id"] = sent_id
-                    lemma_instance["pos"] = tracking.index(word_object["pos"])
+                    tracking_pos = tracking.index(word_object["pos"])
+                    lemma_instance["pos"] = tracking_pos
                     lemma_instance["sense"] = word_object["sense"]
                     lemma_file_name = lemma+".json"
+
+                    id_pos_tuple = (sent_id, tracking_pos)
+                    id_pos_part_dict[id_pos_tuple] = word_object["pos"]
                     if os.path.exists(lemma_file_name):
                         with open(lemma_file_name, "r") as lemma_file:
                             lemma_instance_list = json.load(lemma_file)
@@ -328,6 +333,42 @@ def sampleTrainingDataFromFile(size, file):
     else:
         result = torch.stack(t)
     return result
+
+def sampleFromFile2Senses(n_pairs, file, ratio, senses):
+    with Cd("lemmadata/vectors"):
+        data = pd.read_csv(file, delimiter=",")
+
+        rand_indices = list(range(len(data.index)))
+        random.shuffle(rand_indices)
+
+        vectors1 = []
+        vectors2 = []
+
+        i = 0
+        j = 0
+
+        for k in rand_indices:
+            if i >= n_pairs and j >= n_pairs: break 
+            curr = data.iloc[k]
+            if curr.iloc[2] == senses[0] and i < n_pairs:
+                vectors1.append(curr.iloc[3:])
+                i += 1
+            if curr.iloc[2] == senses[1] and j < n_pairs:
+                vectors2.append(curr.iloc[3:])
+                j += 1
+        
+        pairs = []
+        for z in range(len(vectors1)):
+            different_pair = pd.concat([pd.Series([0]), vectors1[z], vectors2[z]])
+            pairs.append(torch.from_numpy(numpy.float64(different_pair.values)))
+        for z in range(0, len(vectors1), 2):
+            pair1 = pd.concat([pd.Series([1]), vectors1[z], vectors1[z+1]])
+            pair2 = pd.concat([pd.Series([1]), vectors2[z], vectors2[z+1]])
+            pairs.append(torch.from_numpy(numpy.float64(pair1.values)))
+            pairs.append(torch.from_numpy(numpy.float64(pair2.values)))
+
+        return torch.stack(pairs)
+
 
 
 
