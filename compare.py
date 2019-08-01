@@ -259,20 +259,32 @@ def generateWordLemmaDict():
     with open("word_lemma_dict.json", "w") as f:
         json.dump(d, f, indent=4)
 
-def sampleAllTrainingData(max_n_pairs=1000, limit_num_files=10):
-    t = []
+def sampleData(max_n_pairs=1000, limit_num_files_train=10, limit_num_files_test=2):
+    t_train = []
+    t_test = []
     with Cd("lemmadata/vectors"):
         files = os.listdir()
-    i = 0
-    for file in files:
-        if i > limit_num_files:
-            return torch.cat(t)
+    rand_perm = list(range(len(files)))
+    random.shuffle(rand_perm)
+    indices_train = rand_perm[:limit_num_files_train]
+    indices_test = rand_perm[limit_num_files_train: limit_num_files_train + limit_num_files_test]
+    
+    print("Training Data:")
+    for i in indices_train:
+        file = files[i]
         print("processing", file)
         curr = sampleTrainingDataFromFile(max_n_pairs, file).float()
         if curr.shape != torch.Size([0]):
-            t.append(curr)
-        i += 1
-    return torch.cat(t)
+            t_train.append(curr)
+
+    print("Testing Data:")
+    for j in indices_test:
+        file = files[j]
+        print("processing:", files)
+        curr = sampleTrainingDataFromFile(max_n_pairs, file).float()
+        if curr.shape != torch.Size([0]):
+            t_test.append(curr)
+    return (torch.cat(t_train), torch.cat(t_test))
 
 
 def sampleTrainingDataFromFile(size, file):
