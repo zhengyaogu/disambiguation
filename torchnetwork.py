@@ -24,6 +24,8 @@ else:
 trainingData, testData = sampleData(50, 2100, 400)
 trainingData = cudaify(trainingData)
 testData = cudaify(testData)
+print("training size:", trainingData.shape[0])
+print("testing size:", testData.shape[0])
 
 
 classifier = cudaify(DropoutClassifier7(1536, 700, 2))
