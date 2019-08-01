@@ -1,6 +1,7 @@
 from torch import optim
 import torch
 import sys
+import json
 
 
 
@@ -55,7 +56,8 @@ def train_net(net, train, dev, batcher, batch_size, n_epochs, learning_rate, ver
     
     The return value is the trained neural network.
     
-    """    
+    """
+    logs = []    
     def log(text):
         if verbose:
             sys.stdout.write(text)
@@ -87,5 +89,7 @@ def train_net(net, train, dev, batcher, batch_size, n_epochs, learning_rate, ver
             best_net = net
             best_acc = acc
         log("{:.2f}\n".format(acc))
+        logs.append(acc)
+    json.dump(logs, "accuracy.json", indent = 4)
     return best_net
 
