@@ -277,7 +277,15 @@ def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
                     if sense_occurances[1][1] > n_total_pairs:
                         #print(sense_occurances)
                         files_to_read.append((dir_name, [sense_occurances[0][0],sense_occurances[1][0]]))
+    pairs_train = []
+    pairs_test = []
     for f in files_to_read:
+        curr_train, curr_test = sampleFromFileTwoSenses(n_total_pairs, f[0], percent_training_data, f[1])
+        pairs_train.append(curr_train)
+        pairs_test.append(curr_test)
+    return (torch.cat(pairs_train), torch.cat(pairs_test))
+
+
 
 
 
@@ -386,17 +394,25 @@ def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
                 vectors2.append(curr.iloc[3:])
                 j += 1
         
-        pairs = []
+        pairs_train = []
+        pairs_test = []
         for z in range(len(vectors1)):
             different_pair = pd.concat([pd.Series([0]), vectors1[z], vectors2[z]])
-            pairs.append(torch.from_numpy(numpy.float64(different_pair.values)))
+            if z < len(vectors1) * ratio:
+                pairs_train.append(torch.from_numpy(numpy.float64(different_pair.values)))
+            else:
+                pairs_test.append(torch.from_numpy(numpy.float64(different_pair.values)))
         for z in range(0, len(vectors1), 2):
             pair1 = pd.concat([pd.Series([1]), vectors1[z], vectors1[z+1]])
             pair2 = pd.concat([pd.Series([1]), vectors2[z], vectors2[z+1]])
-            pairs.append(torch.from_numpy(numpy.float64(pair1.values)))
-            pairs.append(torch.from_numpy(numpy.float64(pair2.values)))
+            if z < len(vectors1) * ratio:
+                pairs_train.append(torch.from_numpy(numpy.float64(pair1.values)))
+                pairs_train.append(torch.from_numpy(numpy.float64(pair2.values)))
+            else:
+                pairs_test.append(torch.from_numpy(numpy.float64(pair1.values)))
+                pairs_test.append(torch.from_numpy(numpy.float64(pair2.values)))
 
-        return torch.stack(pairs)
+        return (torch.stack(pairs_train), torch.stack(pairs_test))
 
 
 
