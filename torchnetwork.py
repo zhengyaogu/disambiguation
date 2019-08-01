@@ -25,7 +25,7 @@ trainingData, testData = sampleData(1000, 2100, 400)
 trainingData = cudaify(trainingData)
 testData = cudaify(testData)
 
-classifier = cudaify(SimpleClassifier(1536, 700,2))
+classifier = cudaify(DropoutClassifier7(1536, 700,2))
 
 train_net(classifier, trainingData, testData, tensor_batcher,
               batch_size=96, n_epochs=100, learning_rate=0.001,
