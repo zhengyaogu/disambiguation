@@ -272,7 +272,7 @@ def sampleData(max_n_pairs=1000, limit_num_files_train=10, limit_num_files_test=
     print("Training Data:")
     for i in indices_train:
         file = files[i]
-        if file == "be.csv": continue
+        if not os.path.isfile(file) or file == "be.csv" or not file.endswith(".csv"): continue
         print("processing", file)
         curr = sampleTrainingDataFromFile(max_n_pairs, file).float()
         if curr.shape != torch.Size([0]):
@@ -281,7 +281,7 @@ def sampleData(max_n_pairs=1000, limit_num_files_train=10, limit_num_files_test=
     print("Testing Data:")
     for j in indices_test:
         file = files[j]
-        if file == "be.csv": continue
+        if not os.path.isfile(file) or file == "be.csv" or not file.endswith(".csv"): continue
         print("processing:", file)
         curr = sampleTrainingDataFromFile(max_n_pairs, file).float()
         if curr.shape != torch.Size([0]):
