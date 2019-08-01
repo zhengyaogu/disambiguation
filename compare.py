@@ -334,7 +334,7 @@ def sampleTrainingDataFromFile(size, file):
         result = torch.stack(t)
     return result
 
-def sampleFromFile2Senses(n_pairs, file, ratio, senses):
+def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
     with Cd("lemmadata/vectors"):
         data = pd.read_csv(file, delimiter=",")
 
