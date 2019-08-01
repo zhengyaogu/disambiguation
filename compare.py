@@ -15,6 +15,7 @@ import csv
 import random
 import numpy
 from cd import Cd
+import operator
 from itertools import product
 
 total_size = 0
@@ -52,7 +53,7 @@ def vectorizeWordInContext(sentence, pos, tokenizer, model):
     return final_layer[pos]
 
 
-def BreakToString(break_level):
+def breakToString(break_level):
     """
     This helper function returns the correct string to use when creating the
     natural sentence, based on the specified break level.
@@ -245,6 +246,34 @@ def unicodeToAscii(s):
         if unicodedata.category(c) != 'Mn'
         and c in all_letters
     )
+def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
+
+    with Cd("lemmadata/vectors"):
+        files_to_read = []
+        for file_num, dir_name in enumerate(os.listdir()):
+            if os.path.isfile(dir_name) and dir_name.endswith(".csv"):
+                senses_in_file = {}
+                with open(dir_name, "r") as f:
+                    print(dir_name)
+                    data = pd.read_csv(f, header=None,delimiter=",")
+                    for row in data.iterrows():
+                        index, row_data = row
+                        sense = row_data[2]
+                        if not sense in senses_in_file:
+                            senses_in_file[sense] = 1
+                        else:
+                            senses_in_file[sense] += 1
+                    if len(senses_in_file) < 2:
+                        continue
+                    sense_occurances = []
+                    for key in senses_in_file.keys():
+                        sense_occurances.append((key, senses_in_file[key]))
+                    sense_occurances = sorted(sense_occurances,reverse=True, key=operator.itemgetter(1))
+                    if sense_occurances[1][1] > n_total_pairs:
+                        #print(sense_occurances)
+                        files_to_read.append((dir_name, [sense_occurances[0][0],sense_occurances[1][0]]))
+    for f in files_to_read:
+
 
 
 def generateWordLemmaDict():
@@ -330,4 +359,4 @@ def sampleTrainingDataFromFile(size, file):
 
 
 if __name__ == "__main__":
-    sampleAllTrainingData(1000)
+    sampleDataTwoSenses(100, 2, .8)

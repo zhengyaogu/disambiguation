@@ -28,5 +28,5 @@ testData = cudaify(testData)
 classifier = cudaify(SimpleClassifier(1536, 1000, 400, 100, 20, 2))
 
 train_net(classifier, trainingData, testData, tensor_batcher,
-              batch_size=96, n_epochs=1000, learning_rate=0.001,
+              batch_size=96, n_epochs=200, learning_rate=0.001,
               verbose=True)
