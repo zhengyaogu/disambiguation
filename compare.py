@@ -264,7 +264,6 @@ def sampleData(max_n_pairs=1000, limit_num_files_train=10, limit_num_files_test=
     t_test = []
     with Cd("lemmadata/vectors"):
         files = os.listdir()
-        print(files)
     rand_perm = list(range(len(files)))
     random.shuffle(rand_perm)
     indices_train = rand_perm[:limit_num_files_train]
@@ -273,6 +272,7 @@ def sampleData(max_n_pairs=1000, limit_num_files_train=10, limit_num_files_test=
     print("Training Data:")
     for i in indices_train:
         file = files[i]
+        print(os.path.isfile(file))
         if not os.path.isfile(file) or file == "be.csv" or not file.endswith(".csv"): continue
         print("processing", file)
         curr = sampleTrainingDataFromFile(max_n_pairs, file).float()
