@@ -254,7 +254,7 @@ def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
     with Cd("lemmadata/vectors"):
         files_to_read = []
         for file_num, dir_name in enumerate(os.listdir()):
-            if os.path.isfile(dir_name) and dir_name.endswith(".csv"):
+            if os.path.isfile(dir_name) and dir_name.endswith(".csv") and not dir_name.startswith("be"):
                 senses_in_file = {}
                 with open(dir_name, "r") as f:
                     print(dir_name)
@@ -283,13 +283,7 @@ def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
         curr_train, curr_test = sampleFromFileTwoSenses(n_total_pairs, f[0], percent_training_data, f[1])
         pairs_train.append(curr_train)
         pairs_test.append(curr_test)
-    print("size of training data:", pairs_train[0].shape[0])
-    print("size of testing data:", pairs_test[0].shape[0])
-    pairs_train = torch.cat(pairs_train)
-    pairs_test = torch.cat(pairs_test)
-    print(pairs_train)
-    print(pairs_test)
-    return pairs_train, pairs_test
+    return (torch.cat(pairs_train).float(), torch.cat(pairs_test).float())
 
 
 def generateWordLemmaDict():
@@ -415,8 +409,44 @@ def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
                 pairs_test.append(torch.from_numpy(numpy.float64(pair1.values)))
                 pairs_test.append(torch.from_numpy(numpy.float64(pair2.values)))
 
-        return (torch.stack(pairs_train), torch.stack(pairs_test))
+        return (torch.stack(pairs_train).float(), torch.stack(pairs_test).float())
 
+def getMostDiverseLemmas():
+    with Cd("lemmadata/vectors"):
+        files_to_read = []
+        for file_num, dir_name in enumerate(os.listdir()):
+            if os.path.isfile(dir_name) and dir_name.endswith(".csv"):
+                senses_in_file = {}
+                with open(dir_name, "r") as f:
+                    print(dir_name)
+                    data = pd.read_csv(f, header=None,delimiter=",")
+                    for row in data.iterrows():
+                        index, row_data = row
+                        sense = row_data[2]
+                        if not sense in senses_in_file:
+                            senses_in_file[sense] = 1
+                        else:
+                            senses_in_file[sense] += 1
+                    if len(senses_in_file) < 2:
+                        continue
+                    sense_occurances = []
+                    for key in senses_in_file.keys():
+                        sense_occurances.append((key, senses_in_file[key]))
+                    sense_occurances = sorted(sense_occurances,reverse=True, key=operator.itemgetter(1))
+                    files_to_read.append((dir_name, sense_occurances[1][1], sense_occurances[0][0], sense_occurances[1][0]))
+    print(files_to_read)
+    files_to_read = sorted(files_to_read, key=operator.itemgetter(1), reverse=True)
+    with open("files_to_read.json","w") as f:
+        json.dump(files_to_read, f)
+    return files_to_read
+
+def loadMostDiverseLemmas():
+    """
+    returns a sorted list of tuples, where the sort key is the number of occurances
+    of the second most common sense of a word. 
+    """
+    with open("files_to_read.json", "r") as f:
+        return json.load(f)
 
 if __name__ == "__main__":
-    sampleDataTwoSenses(10,2,.8)
+    getMostDiverseLemmas()
