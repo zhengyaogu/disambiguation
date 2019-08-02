@@ -4,18 +4,18 @@ import numpy as np
 from compare import sampleData, sampleFromFileTwoSenses, sampleDataTwoSenses, loadMostDiverseLemmas
 from experiment import tensor_batcher
 from train import train_net
-from networks import SimpleClassifier, DropoutClassifier7
+from networks import SimpleClassifier, DropoutClassifier
 
 
 def createAndTrainNN(file_name, trainingData, testData):
 
     if torch.cuda.is_available():
         print("using gpu")
-        cuda = torch.device('cuda:0')
+        cuda = torch.device('cuda:2')
         FloatTensor = torch.FloatTensor
         LongTensor = torch.LongTensor
         def cudaify(model):
-            return model.cuda()
+            return model.cuda(cuda)
     else: 
         print("using cpu")
         cuda = torch.device('cpu')
@@ -32,10 +32,10 @@ def createAndTrainNN(file_name, trainingData, testData):
     print(file_name)
 
 
-    classifier = cudaify(DropoutClassifier7(1536, 700, 2))
+    classifier = cudaify(DropoutClassifier(1536, 700, 2))
 
     train_net(classifier, trainingData, testData, tensor_batcher,
-                batch_size=96, n_epochs=60, learning_rate=0.001,
+                batch_size=96, n_epochs=10, learning_rate=0.001,
                 verbose=True)
 
 if __name__=="__main__":
@@ -50,14 +50,14 @@ if __name__=="__main__":
     position and trains a network on each. This process is extremely fast due to the
     small data size.
     """
-    best_rank_to_allow = 15
-    worst_rank_to_allow = 15
+    best_rank_to_allow = 300
+    worst_rank_to_allow = 315
 
     for i in range(best_rank_to_allow, worst_rank_to_allow):
         file_name, num_pairs, sense1, sense2 = most_diverse_lemmas[i]
         if not num_pairs % 10 == 0:
             num_pairs -= num_pairs % 10
-        trainingData, testData = sampleFromFileTwoSenses(num_pairs, file_name, 0.8, [sense1, sense2])
+        trainingData, testData = sampleFromFileTwoSenses(100, file_name, 0.8, [sense1, sense2])
 
         createAndTrainNN(file_name, trainingData, testData)
         i += 1
