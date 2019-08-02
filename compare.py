@@ -283,13 +283,7 @@ def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
         curr_train, curr_test = sampleFromFileTwoSenses(n_total_pairs, f[0], percent_training_data, f[1])
         pairs_train.append(curr_train)
         pairs_test.append(curr_test)
-    print("size of training data:", pairs_train[0].shape[0])
-    print("size of testing data:", pairs_test[0].shape[0])
-    pairs_train = torch.cat(pairs_train)
-    pairs_test = torch.cat(pairs_test)
-    print(pairs_train)
-    print(pairs_test)
-
+    return (torch.cat(pairs_train).float(), torch.cat(pairs_test).float())
 
 def generateWordLemmaDict():
     with open("googledata.json", "r") as f:
@@ -418,4 +412,4 @@ def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
 
 
 if __name__ == "__main__":
-    sampleDataTwoSenses(10,2,.8)
+    sampleDataTwoSenses(100,2,.8)
