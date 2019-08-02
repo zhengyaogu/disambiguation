@@ -449,4 +449,4 @@ def loadMostDiverseLemmas():
         return json.load(f)
 
 if __name__ == "__main__":
-    getMostDiverseLemmas()
+    getFormattedData("all")
