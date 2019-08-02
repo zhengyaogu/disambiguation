@@ -1,7 +1,7 @@
 from __future__ import print_function, division
 import torch
 import numpy as np 
-from compare import sampleData, sampleTrainingDataFromFile
+from compare import sampleData, sampleTrainingDataFromFile, sampleDataTwoSenses
 from experiment import tensor_batcher
 from train import train_net
 from networks import SimpleClassifier, DropoutClassifier7
@@ -21,11 +21,11 @@ else:
     def cudaify(model):
         return model
 
-trainingData, testData = sampleData(50, 2100, 400)
+trainingData, testData = sampleDataTwoSenses(100, 1, .80)
 trainingData = cudaify(trainingData)
 testData = cudaify(testData)
-print("training size:", trainingData.shape[0])
-print("testing size:", testData.shape[0])
+print("training size:", trainingData.shape)
+print("testing size:", testData.shape)
 
 
 classifier = cudaify(DropoutClassifier7(1536, 700, 2))

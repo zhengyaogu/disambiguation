@@ -250,7 +250,7 @@ def unicodeToAscii(s):
         and c in all_letters
     )
 def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
-
+    n_total_pairs = n_total_pairs//2
     with Cd("lemmadata/vectors"):
         files_to_read = []
         for file_num, dir_name in enumerate(os.listdir()):
@@ -289,6 +289,7 @@ def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
     pairs_test = torch.cat(pairs_test)
     print(pairs_train)
     print(pairs_test)
+    return pairs_train, pairs_test
 
 
 def generateWordLemmaDict():
