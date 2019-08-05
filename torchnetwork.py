@@ -4,18 +4,18 @@ import numpy as np
 from compare import sampleData, sampleFromFileTwoSenses, sampleDataTwoSenses, loadMostDiverseLemmas
 from experiment import tensor_batcher
 from train import train_net
-from networks import SimpleClassifier, DropoutClassifier7
+from networks import SimpleClassifier, DropoutClassifier
 
 
 def createAndTrainNN(file_name, trainingData, testData):
 
     if torch.cuda.is_available():
         print("using gpu")
-        cuda = torch.device('cuda:0')
+        cuda = torch.device('cuda:1')
         FloatTensor = torch.FloatTensor
         LongTensor = torch.LongTensor
         def cudaify(model):
-            return model.cuda()
+            return model.cuda(cuda)
     else: 
         print("using cpu")
         cuda = torch.device('cpu')
@@ -32,7 +32,7 @@ def createAndTrainNN(file_name, trainingData, testData):
     print(file_name)
 
 
-    classifier = cudaify(DropoutClassifier7(1536, 700, 2))
+    classifier = cudaify(DropoutClassifier(1536, 100, 2))
 
     train_net(classifier, trainingData, testData, tensor_batcher,
                 batch_size=96, n_epochs=60, learning_rate=0.001,
@@ -50,7 +50,7 @@ if __name__=="__main__":
     position and trains a network on each. This process is extremely fast due to the
     small data size.
     """
-    best_rank_to_allow = 15
+    best_rank_to_allow = 1
     worst_rank_to_allow = 15
 
     for i in range(best_rank_to_allow, worst_rank_to_allow):
