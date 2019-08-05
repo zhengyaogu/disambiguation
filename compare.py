@@ -80,7 +80,6 @@ def getJsonSentences(data):
             sentence.append(word)
     return sentences
 
-
 def createLemmaData(file_):
     with open(file_) as f:
         file_data = json.load(f)
@@ -88,7 +87,7 @@ def createLemmaData(file_):
     with open("word_lemma_dict.json", "r") as f:
         word_lemma_dict = json.load(f)
     id_sent_dict = {}
-    with Cd("lemmadata"):
+    with Cd("lemmadata"): 
         sent_id = 0
         for document in file_data:
             doc_body = document["doc"]
@@ -106,7 +105,7 @@ def createLemmaData(file_):
                     tracking_pos = tracking.index(word_object["pos"])
                     lemma_instance["pos"] = tracking_pos
                     lemma_instance["sense"] = word_object["sense"]
-                    lemma_instance["pofs"] = word_object["pos"]
+                    lemma_instance["pofs"] = word_object["pofs"]
                     lemma_file_name = lemma+".json"
 
                     if os.path.exists(lemma_file_name):
@@ -417,6 +416,7 @@ def getMostDiverseLemmas():
         for file_num, dir_name in enumerate(os.listdir()):
             if os.path.isfile(dir_name) and dir_name.endswith(".csv"):
                 senses_in_file = {}
+                if os.stat(dir_name).st_size == 0: continue
                 with open(dir_name, "r") as f:
                     print(dir_name)
                     data = pd.read_csv(f, header=None,delimiter=",")
@@ -449,4 +449,4 @@ def loadMostDiverseLemmas():
         return json.load(f)
 
 if __name__ == "__main__":
-    getFormattedData("all")
+    getMostDiverseLemmas()
