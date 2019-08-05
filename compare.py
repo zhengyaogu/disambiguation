@@ -17,6 +17,7 @@ import numpy
 from cd import Cd
 import operator
 from itertools import product
+import math
 
 total_size = 0
 
@@ -248,8 +249,9 @@ def unicodeToAscii(s):
         if unicodedata.category(c) != 'Mn'
         and c in all_letters
     )
-def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
-    n_total_pairs = n_total_pairs//2
+def sampleDataTwoSenses(n_pairs, lower_bound_n_test, file_num_limit, percent_training_data):
+    if n_pairs * (1 - percent_training_data) < lower_bound_n_test:
+        n_pairs = math.ceil(lower_bound_n_test / (1 - percent_training_data))
     with Cd("lemmadata/vectors"):
         files_to_read = []
         for file_num, dir_name in enumerate(os.listdir()):
@@ -271,19 +273,24 @@ def sampleDataTwoSenses(n_total_pairs, file_num_limit, percent_training_data):
                     for key in senses_in_file.keys():
                         sense_occurances.append((key, senses_in_file[key]))
                     sense_occurances = sorted(sense_occurances,reverse=True, key=operator.itemgetter(1))
-                    if sense_occurances[1][1] > n_total_pairs:
+                    n_most_common = sense_occurances[0][1]
+                    n_second_common = sense_occurances[1][1]
+                    if n_second_common * (1 - percent_training_data) >= lower_bound_n_test:
                         #print(sense_occurances)
-                        files_to_read.append((dir_name, [sense_occurances[0][0],sense_occurances[1][0]]))
+                        files_to_read.append((dir_name, [sense_occurances[0][0], sense_occurances[1][0]]))
                         if len(files_to_read) >= file_num_limit:
                             break
     pairs_train = []
     pairs_test = []
     for f in files_to_read:
-        curr_train, curr_test = sampleFromFileTwoSenses(n_total_pairs, f[0], percent_training_data, f[1])
+        print("pairing:", f[0])
+        curr_train, curr_test = sampleFromFileTwoSenses(n_pairs, f[0], percent_training_data, f[1])
         pairs_train.append(curr_train)
         pairs_test.append(curr_test)
-    return (torch.cat(pairs_train).float(), torch.cat(pairs_test).float())
-
+    pairs_train = torch.cat(pairs_train).float()
+    pairs_test = torch.cat(pairs_test).float()
+    return (pairs_train, pairs_test)
+    
 
 def generateWordLemmaDict():
     with open("googledata.json", "r") as f:
@@ -381,7 +388,7 @@ def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
         j = 0
 
         for k in rand_indices:
-            if i >= n_pairs and j >= n_pairs: break 
+            if i >= n_pairs and j >= n_pairs: break
             curr = data.iloc[k]
             if curr.iloc[2] == senses[0] and i < n_pairs:
                 vectors1.append(curr.iloc[3:])
@@ -390,25 +397,66 @@ def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
                 vectors2.append(curr.iloc[3:])
                 j += 1
         
-        pairs_train = []
-        pairs_test = []
-        for z in range(len(vectors1)):
-            different_pair = pd.concat([pd.Series([0]), vectors1[z], vectors2[z]])
-            if z < len(vectors1) * ratio:
-                pairs_train.append(torch.from_numpy(numpy.float64(different_pair.values)))
-            else:
-                pairs_test.append(torch.from_numpy(numpy.float64(different_pair.values)))
-        for z in range(0, len(vectors1), 2):
-            pair1 = pd.concat([pd.Series([1]), vectors1[z], vectors1[z+1]])
-            pair2 = pd.concat([pd.Series([1]), vectors2[z], vectors2[z+1]])
-            if z < len(vectors1) * ratio:
-                pairs_train.append(torch.from_numpy(numpy.float64(pair1.values)))
-                pairs_train.append(torch.from_numpy(numpy.float64(pair2.values)))
-            else:
-                pairs_test.append(torch.from_numpy(numpy.float64(pair1.values)))
-                pairs_test.append(torch.from_numpy(numpy.float64(pair2.values)))
+        vectors1_train = vectors1[:math.floor(len(vectors1) * ratio)]
+        vectors1_test = vectors1[math.floor(len(vectors1) * ratio):]
+        vectors2_train = vectors2[:math.floor(len(vectors2) * ratio)]
+        vectors2_test = vectors2[math.floor(len(vectors2) * ratio):]
 
-        return (torch.stack(pairs_train).float(), torch.stack(pairs_test).float())
+        train_pos = []
+        train_neg = []
+        test_pos = []
+        test_neg = []
+        # train_pos
+        for i in range(len(vectors1_train)):
+            j = i
+            while j < len(vectors1_train):
+                pair = pd.concat([pd.Series([1]), vectors1_train[i], vectors1_train[j]])
+                train_pos.append(torch.from_numpy(numpy.float64(pair.values)))
+                j += 1
+        for i in range(len(vectors2_train)):
+            j = i
+            while j < len(vectors2_train):
+                pair = pd.concat([pd.Series([1]), vectors2_train[i], vectors2_train[j]])
+                train_pos.append(torch.from_numpy(numpy.float64(pair.values)))
+                j += 1
+        # train_neg
+        for v1 in vectors1_train:
+            for v2 in vectors2_train:
+                pair = pd.concat([pd.Series([0]), v1, v2])
+                train_neg.append(torch.from_numpy(numpy.float64(pair.values)))
+        # test_pos
+        for i in range(len(vectors1_test)):
+            j = i
+            while j < len(vectors1_test):
+                pair = pd.concat([pd.Series([1]), vectors1_test[i], vectors1_test[j]])
+                test_pos.append(torch.from_numpy(numpy.float64(pair.values)))
+                j += 1
+        for i in range(len(vectors2_test)):
+            j = i
+            while j < len(vectors2_test):
+                pair = pd.concat([pd.Series([1]), vectors2_test[i], vectors2_test[j]])
+                test_pos.append(torch.from_numpy(numpy.float64(pair.values)))
+                j += 1
+        # test_neg
+        for v1 in vectors1_test:
+            for v2 in vectors2_test:
+                pair = pd.concat([pd.Series([0]), v1, v2])
+                test_neg.append(torch.from_numpy(numpy.float64(pair.values)))
+        #cut
+        train_min = min(len(train_pos), len(train_neg))
+        train = train_pos[:train_min] + train_neg[:train_min]
+        test_min = min(len(test_pos), len(test_neg))
+        test = train_pos[:test_min] + train_neg[:test_min]
+        if len(train) == 0:
+            result_train = torch.tensor([])
+        else:
+            result_train = torch.stack(train)
+        if len(test) == 0:
+            result_test = torch.tensor([])
+        else:
+            result_test = torch.stack(test)
+        return (result_train.float(), result_test.float())
+
 
 def getMostDiverseLemmas():
     with Cd("lemmadata/vectors"):
@@ -434,7 +482,6 @@ def getMostDiverseLemmas():
                         sense_occurances.append((key, senses_in_file[key]))
                     sense_occurances = sorted(sense_occurances,reverse=True, key=operator.itemgetter(1))
                     files_to_read.append((dir_name, sense_occurances[1][1], sense_occurances[0][0], sense_occurances[1][0]))
-    print(files_to_read)
     files_to_read = sorted(files_to_read, key=operator.itemgetter(1), reverse=True)
     with open("files_to_read.json","w") as f:
         json.dump(files_to_read, f)
