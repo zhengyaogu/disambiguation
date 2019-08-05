@@ -391,10 +391,10 @@ def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
             if i >= n_pairs and j >= n_pairs: break
             curr = data.iloc[k]
             if curr.iloc[2] == senses[0] and i < n_pairs:
-                vectors1.append(curr.iloc[3:])
+                vectors1.append(curr.iloc[4:])
                 i += 1
             if curr.iloc[2] == senses[1] and j < n_pairs:
-                vectors2.append(curr.iloc[3:])
+                vectors2.append(curr.iloc[4:])
                 j += 1
         
         vectors1_train = vectors1[:math.floor(len(vectors1) * ratio)]
