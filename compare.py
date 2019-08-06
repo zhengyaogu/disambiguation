@@ -446,7 +446,7 @@ def sampleFromFileTwoSenses(n_pairs, file, ratio, senses):
         train_min = min(len(train_pos), len(train_neg))
         train = train_pos[:train_min] + train_neg[:train_min]
         test_min = min(len(test_pos), len(test_neg))
-        test = train_pos[:test_min] + train_neg[:test_min]
+        test = test_pos[:test_min] + test_neg[:test_min]
         if len(train) == 0:
             result_train = torch.tensor([])
         else:
