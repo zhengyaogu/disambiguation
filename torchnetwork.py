@@ -32,7 +32,6 @@ def createAndTrainNN(file_name, trainingData, testData):
     print(file_name)
 
 
-
     classifier = cudaify(DropoutClassifier(1536, 100, 2))
 
     train_net(classifier, trainingData, testData, tensor_batcher,
@@ -54,6 +53,7 @@ if __name__=="__main__":
 
     best_rank_to_allow = 0
     worst_rank_to_allow = 15
+
 
     for i in range(best_rank_to_allow, worst_rank_to_allow):
         file_name, num_pairs, sense1, sense2 = most_diverse_lemmas[i]
