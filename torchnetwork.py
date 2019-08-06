@@ -11,11 +11,7 @@ def createAndTrainNN(file_name, trainingData, testData):
 
     if torch.cuda.is_available():
         print("using gpu")
-<<<<<<< HEAD
-        cuda = torch.device('cuda:1')
-=======
         cuda = torch.device('cuda:2')
->>>>>>> c9dadb5b33f1fc769df75c6e2fd1d41f68d3fa58
         FloatTensor = torch.FloatTensor
         LongTensor = torch.LongTensor
         def cudaify(model):
@@ -36,11 +32,8 @@ def createAndTrainNN(file_name, trainingData, testData):
     print(file_name)
 
 
-<<<<<<< HEAD
+
     classifier = cudaify(DropoutClassifier(1536, 100, 2))
-=======
-    classifier = cudaify(DropoutClassifier(1536, 700, 2))
->>>>>>> c9dadb5b33f1fc769df75c6e2fd1d41f68d3fa58
 
     train_net(classifier, trainingData, testData, tensor_batcher,
                 batch_size=96, n_epochs=10, learning_rate=0.001,
@@ -58,13 +51,9 @@ if __name__=="__main__":
     position and trains a network on each. This process is extremely fast due to the
     small data size.
     """
-<<<<<<< HEAD
-    best_rank_to_allow = 1
+
+    best_rank_to_allow = 0
     worst_rank_to_allow = 15
-=======
-    best_rank_to_allow = 300
-    worst_rank_to_allow = 315
->>>>>>> c9dadb5b33f1fc769df75c6e2fd1d41f68d3fa58
 
     for i in range(best_rank_to_allow, worst_rank_to_allow):
         file_name, num_pairs, sense1, sense2 = most_diverse_lemmas[i]
