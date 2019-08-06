@@ -495,5 +495,40 @@ def loadMostDiverseLemmas():
     with open("files_to_read.json", "r") as f:
         return json.load(f)
 
+def findLearnableWords(filename):
+    def compare(l):
+        return l[3]
+    with open(filename, "r") as f:
+        i = 0 # keep track of line num
+        j = 0 # keep track of the number of interesting words
+        max_acc = sys.float_info.min
+        words = []
+        for line in f:
+            if i == 15:
+                if max_acc > 0.6: 
+                    words.append([word, train_size, test_size, max_acc])
+                    j += 1
+                i, max_acc = 0, sys.float_info.min
+            if i % 15 == 1: train_size = line
+            if i % 15 == 2: test_size = line
+            if i % 15 == 3: word = line[:-5]
+            if i % 15 >= 5 and i % 15 <= 14:
+                curr_num = float(line[-5:-1])
+                if curr_num > max_acc: max_acc = curr_num
+            i += 1
+
+        words.sort(key = compare, reverse = True)
+        of = open("interesting_words.txt", "w")
+        of.write("# of interesting words: " + str(j) + "\n")
+        for w in words:
+            of.write(w[0] + ": \n")
+            of.write(w[1])
+            of.write(w[2])
+            of.write("Accuracy: " + str(w[3]) + "\n")
+            of.write("\n")
+        of.close()
+
+
+
 if __name__ == "__main__":
     getMostDiverseLemmas()
