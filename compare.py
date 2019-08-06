@@ -495,7 +495,7 @@ def loadMostDiverseLemmas():
     with open("files_to_read.json", "r") as f:
         return json.load(f)
 
-def findLearnableWords(filename):
+def findLearnableWords(filename, thres):
     def compare(l):
         return l[3]
     with open(filename, "r") as f:
@@ -505,7 +505,7 @@ def findLearnableWords(filename):
         words = []
         for line in f:
             if i == 15:
-                if max_acc > 0.6: 
+                if max_acc > thres: 
                     words.append([word, train_size, test_size, max_acc])
                     j += 1
                 i, max_acc = 0, sys.float_info.min
